@@ -1,0 +1,61 @@
+# mcar — Apache config (production)
+# ----------------------------------
+
+# Default index
+DirectoryIndex index.php index.html
+
+# Error pages
+ErrorDocument 404 /404.php
+
+# Disable directory listing
+Options -Indexes
+
+# Force HTTPS (uncomment after SSL is enabled)
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Block access to dotfiles + sensitive files
+<FilesMatch "^\.|composer\.(json|lock)|\.md$|\.txt$">
+    Require all denied
+</FilesMatch>
+
+# Allow specific text files
+<FilesMatch "^(robots\.txt|sitemap\.xml)$">
+    Require all granted
+</FilesMatch>
+
+# Block direct PHP access in includes/
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^includes/.*\.php$ - [F,L]
+</IfModule>
+
+# Cache static assets aggressively
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css                  "access plus 1 year"
+    ExpiresByType application/javascript    "access plus 1 year"
+    ExpiresByType image/svg+xml             "access plus 1 month"
+    ExpiresByType image/png                 "access plus 1 month"
+    ExpiresByType image/jpeg                "access plus 1 month"
+    ExpiresByType image/webp                "access plus 1 month"
+    ExpiresByType image/x-icon              "access plus 1 year"
+    ExpiresByType font/woff2                "access plus 1 year"
+    ExpiresByType text/html                 "access plus 5 minutes"
+</IfModule>
+
+# Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json image/svg+xml
+</IfModule>
+
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    # Strict CSP (uncomment after testing — current site uses inline styles + external fonts/images)
+    # Header set Content-Security-Policy "default-src 'self'; img-src 'self' data: https://placehold.co https://picsum.photos https://*.unsplash.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; frame-ancestors 'self'"
+</IfModule>

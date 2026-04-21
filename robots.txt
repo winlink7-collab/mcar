@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Block archive folders that aren't part of the live site
+Disallow: /src/
+Disallow: /debug/
+Disallow: /scraps/
+Disallow: /uploads/
+Disallow: /mcar.html
+
+Sitemap: https://mcar.co.il/sitemap.xml

@@ -1,0 +1,61 @@
+# mcar — git ignore
+# ------------------
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+*~
+*.swp
+*.swo
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.code-workspace
+*.sublime-*
+
+# Logs
+*.log
+error_log
+access_log
+
+# PHP runtime
+php_errors.log
+.phpunit.result.cache
+
+# Local config / secrets (none yet but be safe)
+.env
+.env.local
+config.local.php
+includes/config.local.php
+
+# Cache / temp
+*.tmp
+*.cache
+.cache/
+
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# Archive folders — kept out of the repo (legacy design assets, not code)
+# Comment these out if you do want them in the repo
+mcar.html
+src/
+debug/
+scraps/
+uploads/
+
+# Plan / scratch files
+plans/
+scratch/
+TODO.private.md
+
+# Cloudways-specific
+.cloudways/
+
+# OS-specific dot files (allow .htaccess and dotfiles we want)
+!.htaccess
+!.gitignore
