@@ -58,6 +58,11 @@ require_once __DIR__ . '/functions.php';
                 </a>
                 
                 <nav class="nav-links" id="nav-links">
+                    <!-- Mobile-only CTA at top of drawer -->
+                    <a href="contact.php" class="nav-cta" data-offer-modal data-offer-source="mobile-nav">
+                        <?php echo icon('sparkle', 16); ?>
+                        קבל הצעת VIP
+                    </a>
                     <a href="index.php" class="nav-link <?php echo active_class('index'); ?>">דף הבית</a>
                     <a href="about.php" class="nav-link <?php echo active_class('about'); ?>">אודות</a>
                     <a href="grid.php" class="nav-link <?php echo active_class('grid'); ?>">רכבים</a>
