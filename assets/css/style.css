@@ -1566,3 +1566,264 @@ input, select, textarea { font-family: inherit; }
   .search-submit { grid-column: span 1; }
 }
 
+
+/* =============================================
+   MOBILE FIXES — COMPREHENSIVE PAGE-BY-PAGE
+   Appended at end so these rules win cascade.
+   Use !important only for inline-style overrides.
+   ============================================= */
+
+/* ---- Global container + typography tuning for small screens ---- */
+@media (max-width: 900px) {
+  .container { padding: 0 20px; }
+  h1 { word-break: break-word; hyphens: auto; }
+  .eyebrow { font-size: 12px; }
+
+  /* Header actions: hide the primary CTA on very tight screens, keep the gear + hamburger */
+  .site-header { height: 68px; }
+
+  /* Hero section alignment when it stacks */
+  .hero { padding: 24px 0 48px; }
+}
+
+@media (max-width: 600px) {
+  .container { padding: 0 16px; }
+  body { font-size: 16px; }
+  h1 { font-size: clamp(32px, 9vw, 44px) !important; }
+  .eyebrow { font-size: 11px; }
+
+  /* Stats-strip on home */
+  .stats-strip { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .stat-card { padding: 24px 16px 20px; }
+
+  /* Packages */
+  .pkg-grid { grid-template-columns: 1fr !important; }
+
+  /* Deal card (home hero) tweaks */
+  .deal-card { border-radius: var(--r-xl); }
+  .deal-art { padding: 56px 18px 16px; min-height: 200px; }
+  .deal-body { padding: 4px 18px 28px; }
+  .deal-title { font-size: 22px; }
+  .deal-specs .k { font-size: 19px; }
+  .deal-price-now .k { font-size: 32px; }
+  .deal-ribbon { top: 12px; right: 12px; font-size: 11px; padding: 5px 10px 5px 8px; }
+  .deal-stock { top: 12px; left: 12px; font-size: 11px; padding: 5px 10px; }
+  .deal-footer-note { left: 14px; right: 14px; padding: 8px 12px; font-size: 11px; }
+  .deal-footer-note .right { display: none; }
+
+  /* Search: already handled but ensure full width */
+  .search-shell { margin-top: 60px; padding: 8px; border-radius: var(--r-xl); }
+  .search-tabs { right: 50%; transform: translateX(50%); }
+  .seg button { padding: 8px 14px; font-size: 13px; }
+}
+
+/* ---- index.php specific: keep tabs visible above the narrower shell ---- */
+@media (max-width: 600px) {
+  .hero-top-split { gap: 28px; }
+}
+
+/* ---- grid.php ---- */
+@media (max-width: 1000px) {
+  .grid-hero-stats { grid-template-columns: repeat(4, 1fr); gap: 0; }
+  .grid-hero-stats .k { font-size: 22px; }
+  .grid-hero-stats .l { font-size: 11px; }
+}
+@media (max-width: 900px) {
+  .grid-layout { grid-template-columns: 1fr; gap: 20px; }
+  .filter-sidebar { position: static; order: 2; }
+  .grid-results { order: 1; }
+  .grid-toolbar { flex-direction: column; align-items: stretch; gap: 12px; }
+  .grid-toolbar-left { justify-content: space-between; }
+  .grid-toolbar-right { text-align: center; }
+}
+@media (max-width: 600px) {
+  .grid-hero-stats { grid-template-columns: repeat(2, 1fr); }
+  .grid-hero-stats .stat { border-left: none !important; border-top: 1px solid var(--hairline); padding: 14px 10px; }
+  .grid-hero-stats .stat:nth-child(-n+2) { border-top: none; }
+  .grid-results { grid-template-columns: 1fr; }
+  .grid-results.view-list .grid-card { grid-template-columns: 1fr !important; }
+  .toolbar-select { flex: 1; }
+  .view-toggle { display: none; }
+}
+
+/* ---- about.php (inline grid overrides) ---- */
+@media (max-width: 900px) {
+  /* Hero section */
+  main.page-enter section[style*="grid-template-columns: 1.25fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+    padding: 20px 0 40px !important;
+  }
+  /* Story section */
+  main.page-enter section[style*="grid-template-columns: 280px 1fr"] > div,
+  main.page-enter section > div[style*="grid-template-columns: 280px 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+}
+@media (max-width: 600px) {
+  /* Team grid: 4 → 2 → 1 */
+  main.page-enter section div[style*="repeat(4, 1fr)"]:not(.search-grid) {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  /* Story blockquote */
+  main.page-enter div[style*="font-size: 26px"] {
+    font-size: 18px !important;
+    padding: 20px 22px !important;
+  }
+}
+@media (max-width: 400px) {
+  main.page-enter section div[style*="repeat(4, 1fr)"]:not(.search-grid) {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ---- contact.php (inline grid overrides) ---- */
+@media (max-width: 900px) {
+  /* Both hero + form split sections use 1.3fr 1fr */
+  main.page-enter section[style*="grid-template-columns: 1.3fr 1fr"] > div,
+  main.page-enter section > div[style*="grid-template-columns: 1.3fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+  /* Stats row in hero */
+  main.page-enter div[style*="display: flex; gap: 30px"][style*="padding-top: 28px"] {
+    flex-wrap: wrap !important;
+    gap: 20px !important;
+  }
+}
+@media (max-width: 600px) {
+  /* Form inputs: 2 columns → 1 */
+  main.page-enter div[style*="grid-template-columns: 1fr 1fr"][style*="margin-bottom: 24px"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Contact methods grid */
+  main.page-enter div[style*="grid-template-columns: 1fr 1fr; gap: 12px"] {
+    grid-template-columns: 1fr !important;
+  }
+  main.page-enter div[style*="grid-template-columns: 1fr 1fr; gap: 12px"] > a[style*="grid-column: span 2"] {
+    grid-column: span 1 !important;
+  }
+  /* Contact form radio pills */
+  .deal-type-pill { flex: 1 1 100% !important; }
+  main.page-enter div[style*="display: flex; gap: 10px"] {
+    flex-wrap: wrap !important;
+  }
+}
+
+/* ---- compare.php (dynamic grid + inline grids) ---- */
+@media (max-width: 900px) {
+  /* Hero is 1fr 1fr */
+  main.page-enter section > div.container[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+  /* Comparison card grid: force 1 column on narrow screens */
+  main.page-enter section.container > div[style*="grid-template-columns: repeat"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+@media (max-width: 600px) {
+  /* Empty state icon/h2 scaling */
+  main.page-enter.container[style*="padding: 100px 0"] h2 {
+    font-size: 24px !important;
+  }
+}
+
+/* ---- operational.php extra mobile tuning ---- */
+@media (max-width: 600px) {
+  .op-hero-overlay-stats { grid-template-columns: 1fr !important; gap: 4px; }
+  .op-hero-overlay-stats .tier { padding: 8px 12px; }
+  .op-hero-overlay-stats .tier strong { font-size: 15px; }
+  .op-hero-copy h1 { font-size: clamp(30px, 8vw, 42px) !important; }
+  .op-hero-cta { flex-direction: column; align-items: stretch; }
+  .op-hero-cta .btn { justify-content: center; }
+  .op-compare-table { grid-template-columns: 1fr !important; }
+  .op-compare-table .op-compare-th { text-align: right; font-size: 14px; padding: 14px 18px; }
+  .op-compare-table .op-compare-cell { text-align: right; padding: 12px 18px; }
+  .op-compare-cell.op { justify-content: flex-start; }
+  .op-case { padding: 22px; }
+  .op-final-cta { padding: 28px 22px !important; }
+  .op-final-actions { width: 100%; }
+}
+
+/* ---- faq.php ---- */
+@media (max-width: 600px) {
+  .faq-toc { padding: 16px; }
+  .faq-toc-link { padding: 10px; gap: 8px; }
+  .faq-toc-link strong { font-size: 13px; }
+  .faq-toc-icon { width: 32px; height: 32px; }
+  .faq-group-head { flex-direction: row; align-items: center; gap: 12px; padding-bottom: 16px; }
+  .faq-group-head h2 { font-size: 22px; }
+  .faq-group-icon { width: 42px; height: 42px; }
+  .faq-item summary { padding: 16px 18px; gap: 12px; }
+  .faq-q { font-size: 15px; }
+  .faq-plus { font-size: 22px; }
+  .faq-a { padding: 0 18px 18px; font-size: 14px; }
+  .faq-cta { padding: 28px 22px; }
+  .faq-cta h3 { font-size: 22px; }
+  .faq-cta-actions { width: 100%; }
+}
+
+/* ---- careers.php ---- */
+@media (max-width: 600px) {
+  .page-hero-stats { gap: 20px; }
+  .page-hero-stats strong { font-size: 22px; }
+  .page-hero-stats > div { flex: 1 1 calc(50% - 10px); }
+  .job-row { padding: 18px 20px !important; }
+  .job-row h4 { font-size: 17px; }
+  .info-cta { padding: 28px 22px; }
+  .info-cta h3 { font-size: 22px; }
+  .info-cta form { width: 100%; min-width: 0 !important; flex-wrap: wrap; }
+  .info-cta form input { flex: 1 1 100%; }
+}
+
+/* ---- blog.php ---- */
+@media (max-width: 600px) {
+  .blog-featured { padding: 28px 22px; }
+  .blog-featured h2 { font-size: 24px; }
+  .blog-foot { flex-direction: column; align-items: stretch; gap: 14px; }
+  .blog-foot .btn { justify-content: center; }
+  .blog-card { padding: 22px; }
+  .blog-card h3 { font-size: 18px; }
+  .blog-cats { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; padding-bottom: 4px; }
+  .blog-cats::-webkit-scrollbar { display: none; }
+  .blog-cats .pill { flex-shrink: 0; }
+}
+
+/* ---- Tweaks & Offer modals on small screens ---- */
+@media (max-width: 500px) {
+  .offer-modal { width: calc(100% - 20px); }
+  .offer-modal-inner { padding: 28px 20px 22px; }
+  .offer-modal h3 { font-size: 22px; }
+  .offer-bullets { grid-template-columns: 1fr; }
+  .offer-modal-footer { flex-direction: column; align-items: stretch; }
+  .offer-modal-footer .btn { width: 100%; }
+
+  .tweaks-modal { width: calc(100% - 20px); }
+  .tweaks-inner { padding: 22px; }
+  .tweaks-pills { flex-wrap: wrap; }
+  .tweaks-pill { flex: 1 1 auto; justify-content: center; }
+}
+
+/* ---- Footer ---- */
+@media (max-width: 600px) {
+  .site-footer { padding: 48px 0 28px; margin-top: 48px; }
+  .footer-col h4 { font-size: 13px; margin-bottom: 16px; }
+}
+
+/* ---- Prevent horizontal scroll anywhere ---- */
+@media (max-width: 900px) {
+  html, body { overflow-x: hidden; max-width: 100vw; }
+  img, svg { max-width: 100%; height: auto; }
+  table { display: block; overflow-x: auto; }
+}
+
+/* ---- Tap target minimum size (accessibility) ---- */
+@media (max-width: 600px) {
+  .btn, .pill, .seg button, .tweaks-pill, .nav-link,
+  .filter-pills .pill, .view-toggle a {
+    min-height: 44px;
+  }
+  .mini-btn, .nav-toggle { min-width: 44px; min-height: 44px; }
+}
