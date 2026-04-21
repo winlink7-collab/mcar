@@ -160,7 +160,6 @@ if ($is_ajax) {
     <!-- HERO -->
     <section class="grid-hero">
         <div>
-            <div class="eyebrow" style="margin-bottom: 14px;">כלי השוואה · עדכון יומי</div>
             <h1>מצא את העסקה<br>ה<span class="grad">משתלמת ביותר</span><br>בענף הרכב הישראלי.</h1>
             <p>סנן לפי תקציב, קטגוריה ומנוע. בחר עד 3 רכבים להשוואה צד-בצד — כולל מחשבון תשלום חי ומחירי TCO ל-5 שנים.</p>
         </div>
