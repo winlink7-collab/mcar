@@ -111,6 +111,7 @@ $cat_info = $CATEGORIES[$featured_car['category']];
                         </a>
                         <a href="compare.php" class="btn btn-outline" title="השווה רכבים">
                             <?php echo icon('swap', 16); ?>
+                            <span>השווה</span>
                         </a>
                     </div>
                 </div>
@@ -227,8 +228,8 @@ $cat_info = $CATEGORIES[$featured_car['category']];
                         <div class="sub"><?php echo $pkg['sub']; ?></div>
                     </div>
                 </div>
-                <div class="pkg-from">החל מ־</div>
                 <div class="pkg-price-block">
+                    <span class="pkg-from">החל מ־</span>
                     <span class="pkg-price"><span class="sym">₪</span><?php echo number_format($pkg['price']); ?></span>
                     <span class="pkg-price-term">/ חודש</span>
                 </div>

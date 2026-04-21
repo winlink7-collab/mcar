@@ -75,8 +75,14 @@ require_once __DIR__ . '/functions.php';
                         <?php echo icon('sparkle', 14); ?>
                         <span class="btn-label">קבל הצעת VIP</span>
                     </a>
-                    <button type="button" class="mini-btn" id="tweaks-toggle" aria-label="הגדרות תצוגה" title="הגדרות תצוגה">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1A2 2 0 1 1 4.3 17l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+                    <button type="button" class="mini-btn" id="tweaks-toggle" aria-label="התאמה אישית של העיצוב" title="התאמה אישית של העיצוב">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2a10 10 0 0 0 0 20c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.4-.3-.3-.5-.8-.5-1.3 0-1.1.9-2 2-2h2.4a5 5 0 0 0 4.6-5c0-4.4-4.5-8-10-8z"/>
+                            <circle cx="7"  cy="10" r="1.4" fill="#e11d48"/>
+                            <circle cx="11" cy="6.5" r="1.4" fill="#f59e0b"/>
+                            <circle cx="15" cy="8"  r="1.4" fill="#14b8a6"/>
+                            <circle cx="17" cy="12" r="1.4" fill="#6d28d9"/>
+                        </svg>
                     </button>
                     <button type="button" class="nav-toggle" id="nav-toggle" aria-label="פתח תפריט" aria-controls="nav-links" aria-expanded="false">
                         <?php echo icon('menu', 22); ?>

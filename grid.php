@@ -345,7 +345,7 @@ if ($is_ajax) {
                         </div>
 
                         <div class="grid-card-cta">
-                            <a href="compare.php?ids=<?php echo $car['id']; ?>" class="btn btn-outline btn-icon" title="השווה" aria-label="השווה"><?php echo icon('swap', 14); ?></a>
+                            <a href="compare.php?ids=<?php echo $car['id']; ?>" class="btn btn-outline btn-icon" title="השווה רכב" aria-label="השווה רכב"><?php echo icon('swap', 14); ?> <span class="btn-icon-label">השווה</span></a>
                             <a href="contact.php?car=<?php echo $car['id']; ?>" class="btn btn-outline grid-cta-main" data-offer-modal data-offer-source="grid-<?php echo $car['id']; ?>"><?php echo icon('sparkle', 14); ?> קבל הצעה</a>
                         </div>
                     </div>

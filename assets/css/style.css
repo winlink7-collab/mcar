@@ -297,8 +297,15 @@ input, select, textarea { font-family: inherit; }
 }
 .msb-call { background: linear-gradient(180deg, var(--accent-2), var(--accent)); color: #fff; box-shadow: 0 6px 20px -6px var(--accent); }
 .msb-call:hover, .msb-call:active { transform: scale(1.02); }
-.msb-wa { background: #fff; color: var(--ink); border: 1px solid var(--surface-border-strong); }
+.msb-wa { background: #fff; color: #111; border: 1px solid var(--surface-border-strong); }
 .msb-wa svg { color: #25D366; }
+[data-mode="dark"] .msb-wa { background: #25D366; color: #06371c; border-color: transparent; box-shadow: 0 6px 20px -6px #25D366; }
+[data-mode="dark"] .msb-wa svg { color: #06371c; }
+
+/* WhatsApp ghost buttons globally: ensure visible in dark */
+[data-mode="dark"] .btn-ghost [style*="color: #25D366"] { color: #34d399 !important; }
+[data-mode="dark"] a[href*="wa.me"].btn-ghost { background: rgba(37,211,102,.14); border-color: rgba(37,211,102,.35); color: var(--ink); }
+[data-mode="dark"] a[href*="wa.me"].btn-ghost:hover { background: rgba(37,211,102,.22); border-color: rgba(37,211,102,.55); }
 @media (max-width: 768px) {
   .mobile-sticky-bar { display: flex; }
   body { padding-bottom: 84px; } /* space so content isn't hidden */
@@ -1483,8 +1490,12 @@ input, select, textarea { font-family: inherit; }
 .deal-availability .bar-low > div  { background: linear-gradient(90deg, #f43f5e, #fb7185); }
 
 .grid-card-cta { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center; }
-.grid-card-cta .btn-icon { padding: 10px; min-width: 40px; justify-content: center; }
+.grid-card-cta .btn-icon { padding: 10px 14px; min-width: 40px; justify-content: center; gap: 6px; }
+.grid-card-cta .btn-icon .btn-icon-label { font-size: 13px; font-weight: 600; }
 .grid-card-cta .grid-cta-main { justify-content: center; }
+@media (max-width: 380px) {
+  .grid-card-cta .btn-icon .btn-icon-label { display: none; }
+}
 
 @media (max-width: 1000px) {
   .grid-hero { grid-template-columns: 1fr; gap: 24px; }
@@ -1554,9 +1565,9 @@ input, select, textarea { font-family: inherit; }
 .pkg-icon { width: 48px; height: 48px; border-radius: var(--r-md); background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; flex-shrink: 0; }
 .pkg-title-block h3 { font-size: 22px; font-weight: 800; }
 .pkg-title-block .sub { font-size: 15px; color: var(--ink-3); font-family: var(--font-mono); margin-top: 2px; }
-.pkg-from { font-size: 16px; color: var(--ink-3); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .08em; }
-.pkg-price-block { display: flex; align-items: baseline; gap: 6px; }
-.pkg-price { font-family: var(--font-display); font-size: 44px; font-weight: 900; line-height: 1; letter-spacing: -0.03em; }
+.pkg-from { font-size: 14px; color: var(--ink-3); font-family: var(--font-mono); letter-spacing: .04em; white-space: nowrap; font-weight: 600; }
+.pkg-price-block { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.pkg-price { font-family: var(--font-display); font-size: 40px; font-weight: 900; line-height: 1; letter-spacing: -0.03em; }
 .pkg-price .sym { font-size: 22px; color: var(--accent); margin-left: 4px; }
 .pkg-price-term { font-size: 16px; color: var(--ink-3); font-family: var(--font-mono); }
 .pkg-pitch { color: var(--ink-3); line-height: 1.6; font-size: 15px; }
@@ -1661,9 +1672,20 @@ input, select, textarea { font-family: inherit; }
 }
 
 @media (max-width: 600px) {
-  .footer-grid { grid-template-columns: 1fr; }
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px 20px;
+  }
+  .footer-col:first-child { grid-column: 1 / -1; }
+  .footer-col h4 { margin-bottom: 14px; font-size: 13px; }
+  .footer-links { gap: 10px; }
+  .footer-link { font-size: 14px; }
   .search-grid { grid-template-columns: 1fr; }
   .search-submit { grid-column: span 1; }
+}
+@media (max-width: 380px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-col:first-child { grid-column: span 1; }
 }
 
 
@@ -1922,10 +1944,16 @@ input, select, textarea { font-family: inherit; }
 /* ---- Tap target minimum size (accessibility) ---- */
 @media (max-width: 600px) {
   .btn, .pill, .seg button, .tweaks-pill, .nav-link,
-  .filter-pills .pill, .view-toggle a {
+  .filter-pills .pill, .view-toggle a, .blog-cats .pill,
+  .footer-link, .tabs button, .toolbar-select {
     min-height: 44px;
   }
   .mini-btn, .nav-toggle { min-width: 44px; min-height: 44px; }
+  .footer-link { display: inline-flex; align-items: center; }
+  .nav-link { display: flex; align-items: center; }
+  /* Better typography on mobile for readability */
+  p, li, .blog-excerpt, .offer-modal-lead { line-height: 1.65; }
+  .deal-sub, .pkg-title-block .sub { font-size: 13px; }
 }
 
 
@@ -1980,6 +2008,18 @@ input, select, textarea { font-family: inherit; }
   .op-hero-copy h1 { font-size: clamp(26px, 7.5vw, 38px) !important; line-height: 1.15; }
 }
 
+/* ---- Global image safety: no overflow anywhere ---- */
+img, video, iframe {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+img[data-cover], .cover-img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
 /* ---- Ensure absolute no horizontal scroll ---- */
 * { max-width: 100%; }
 @media (max-width: 900px) {
@@ -1987,6 +2027,9 @@ input, select, textarea { font-family: inherit; }
   main, section, .container, .page-hero, .hero { max-width: 100vw; }
   .deal-card, .pkg-card, .stat-card, .blog-card, .grid-card,
   .op-benefit, .op-case, .testi, .feat, .perk { max-width: 100%; }
+  /* Fix home hero deal-art image specifically */
+  .deal-art img { max-width: 100% !important; transform: none !important; }
+  .op-hero-image img { object-fit: cover; }
 }
 
 /* ---- Containers: tighter padding on very small ---- */
