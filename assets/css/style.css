@@ -288,6 +288,7 @@ input, select, textarea { font-family: inherit; }
   box-shadow: 0 20px 60px -20px rgba(0,35,102,.35);
 }
 .msb-btn {
+  flex: 1;
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   padding: 13px 16px; border-radius: var(--r-lg);
   font-size: 15px; font-weight: 700;
@@ -295,22 +296,18 @@ input, select, textarea { font-family: inherit; }
   transition: transform .15s, box-shadow .2s;
 }
 .msb-call {
-  flex: 1;
   background: linear-gradient(180deg, var(--accent-2), var(--accent));
   color: #fff;
   box-shadow: 0 6px 20px -6px var(--accent);
 }
 .msb-call:hover, .msb-call:active { transform: scale(1.02); }
 .msb-wa {
-  flex: 0 0 48px;
-  width: 48px; height: 48px; padding: 0;
-  border-radius: 50%;
   background: #25D366;
   color: #fff;
   box-shadow: 0 6px 20px -6px #25D366, inset 0 1px 0 rgba(255,255,255,.25);
 }
 .msb-wa svg { color: #fff; }
-.msb-wa:hover { transform: scale(1.05); box-shadow: 0 10px 24px -6px #25D366; }
+.msb-wa:hover, .msb-wa:active { transform: scale(1.02); box-shadow: 0 10px 24px -6px #25D366; }
 [data-mode="dark"] .msb-wa { background: #25D366; color: #fff; }
 [data-mode="dark"] .msb-wa svg { color: #fff; }
 
