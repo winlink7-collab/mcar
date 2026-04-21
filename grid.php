@@ -165,111 +165,83 @@ if ($is_ajax) {
         </div>
     </section>
 
-    <!-- TOOLBAR -->
-    <div class="grid-toolbar">
-        <form action="grid.php" method="GET" class="grid-toolbar-left">
-            <?php
-            // Preserve the other GET params
-            foreach (['deal','cat','engine','seats','budget','view'] as $k) {
-                if (isset($_GET[$k])) echo '<input type="hidden" name="'.htmlspecialchars($k).'" value="'.htmlspecialchars($_GET[$k]).'">';
-            }
-            ?>
-            <label class="toolbar-select">
-                <span class="toolbar-select-label">מיון:</span>
-                <select name="sort" onchange="this.form.submit()">
-                    <option value="best"       <?php echo $selected_sort==='best'?'selected':''; ?>>המשתלם ביותר</option>
-                    <option value="price_low"  <?php echo $selected_sort==='price_low'?'selected':''; ?>>מחיר: מהנמוך לגבוה</option>
-                    <option value="price_high" <?php echo $selected_sort==='price_high'?'selected':''; ?>>מחיר: מהגבוה לנמוך</option>
-                    <option value="hp"         <?php echo $selected_sort==='hp'?'selected':''; ?>>הספק</option>
-                    <option value="stock"      <?php echo $selected_sort==='stock'?'selected':''; ?>>זמינות במלאי</option>
-                </select>
-            </label>
-
-            <div class="view-toggle" role="tablist">
-                <a href="<?php echo build_url(['view'=>'grid']); ?>" class="<?php echo $selected_view==='grid'?'on':''; ?>" title="תצוגת גריד" aria-label="גריד"><?php echo icon('menu', 16); ?> גריד</a>
-                <a href="<?php echo build_url(['view'=>'list']); ?>" class="<?php echo $selected_view==='list'?'on':''; ?>" title="תצוגת רשימה" aria-label="רשימה"><?php echo icon('menu', 16); ?> רשימה</a>
+    <!-- FILTERS BAR (top, expanded, horizontal) -->
+    <section class="grid-filters-bar" aria-label="סינון רכבים">
+        <!-- Row 1: Deal type tabs -->
+        <div class="gfb-row gfb-row-deals">
+            <div class="gfb-deals-tabs" role="tablist" aria-label="סוג עסקה">
+                <?php foreach ($DEAL_TYPES as $dt): ?>
+                <a href="<?php echo build_url(['deal'=>$dt['id']]); ?>" class="gfb-deal<?php echo $selected_deal===$dt['id']?' on':''; ?>" role="tab" aria-selected="<?php echo $selected_deal===$dt['id']?'true':'false'; ?>"><?php echo $dt['label']; ?></a>
+                <?php endforeach; ?>
             </div>
-        </form>
-
-        <div class="grid-toolbar-right">
-            מציג <strong><?php echo $count; ?> רכבים</strong> · ליסינג <?php echo $deal_labels[$selected_deal]; ?>
-        </div>
-    </div>
-
-    <!-- LAYOUT: sidebar + cards -->
-    <div class="grid-layout">
-        <!-- SIDEBAR -->
-        <aside class="filter-sidebar">
-            <form action="grid.php" method="GET">
-                <?php
-                // Preserve sort + view across filter submissions
-                if (isset($_GET['sort'])) echo '<input type="hidden" name="sort" value="'.htmlspecialchars($_GET['sort']).'">';
-                if (isset($_GET['view'])) echo '<input type="hidden" name="view" value="'.htmlspecialchars($_GET['view']).'">';
-                ?>
-                <div class="filter-head">
-                    <span><?php echo icon('menu', 16); ?> סינון</span>
-                    <a href="grid.php" class="filter-reset">איפוס</a>
-                </div>
-
-                <!-- Deal type -->
-                <div class="filter-group">
-                    <div class="filter-label">סוג עסקה</div>
-                    <div class="filter-radio-stack">
-                        <?php foreach ($DEAL_TYPES as $dt): ?>
-                        <label class="radio-row<?php echo $selected_deal===$dt['id']?' on':''; ?>">
-                            <input type="radio" name="deal" value="<?php echo $dt['id']; ?>" <?php echo $selected_deal===$dt['id']?'checked':''; ?> onchange="this.form.submit()">
-                            <span class="radio-name"><?php echo $dt['label']; ?></span>
-                            <span class="radio-count"><?php echo $deal_counts[$dt['id']]; ?> יבואנים</span>
-                        </label>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-
-                <!-- Budget -->
-                <div class="filter-group">
-                    <div class="filter-label-row">
-                        <span class="filter-label">תקציב / חודשי</span>
-                        <span class="filter-value">עד ₪<?php echo number_format($selected_budget); ?></span>
-                    </div>
-                    <input type="range" name="budget" min="2000" max="6000" step="250" value="<?php echo $selected_budget; ?>" class="budget-range" oninput="this.nextElementSibling.firstElementChild.nextElementSibling.textContent='עד ₪'+Number(this.value).toLocaleString();" onchange="this.form.submit()">
-                    <div class="budget-ticks"><span>₪6K</span><span>₪2K</span></div>
-                </div>
-
-                <!-- Categories -->
-                <div class="filter-group">
-                    <div class="filter-label">קטגוריות</div>
-                    <div class="filter-pills">
-                        <a href="<?php echo build_url(['cat'=>'all']); ?>" class="pill<?php echo $selected_cat==='all'?' on':''; ?>">הכל</a>
-                        <?php foreach ($CATEGORIES as $id => $cat): ?>
-                        <a href="<?php echo build_url(['cat'=>$id]); ?>" class="pill<?php echo $selected_cat===$id?' on':''; ?>"><?php echo $cat['short']; ?></a>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-
-                <!-- Engine -->
-                <div class="filter-group">
-                    <div class="filter-label">מנוע</div>
-                    <div class="filter-pills">
-                        <a href="<?php echo build_url(['engine'=>'all']); ?>" class="pill<?php echo $selected_engine==='all'?' on':''; ?>">הכל</a>
-                        <?php foreach ($ENGINE_TYPES as $id => $eng): ?>
-                        <a href="<?php echo build_url(['engine'=>$id]); ?>" class="pill pill-engine<?php echo $selected_engine===$id?' on':''; ?>" style="--pill-accent: <?php echo $eng['color']; ?>;">
-                            <span class="glyph"><?php echo $eng['glyph']; ?></span> <?php echo $eng['label']; ?>
-                        </a>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-
-                <!-- Seats -->
-                <div class="filter-group">
-                    <div class="filter-label">מספר מושבים</div>
-                    <div class="filter-pills">
-                        <?php foreach ([['all','הכל'],['4','+4'],['5','5'],['7','+7']] as $opt): list($val,$txt) = $opt; ?>
-                        <a href="<?php echo build_url(['seats'=>$val]); ?>" class="pill<?php echo $selected_seats===$val?' on':''; ?>"><?php echo $txt; ?></a>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
+            <form action="grid.php" method="GET" class="gfb-sort-form">
+                <?php foreach (['deal','cat','engine','seats','budget','view'] as $k) {
+                    if (isset($_GET[$k])) echo '<input type="hidden" name="'.htmlspecialchars($k).'" value="'.htmlspecialchars($_GET[$k]).'">';
+                } ?>
+                <label class="toolbar-select">
+                    <span class="toolbar-select-label">מיון:</span>
+                    <select name="sort" onchange="this.form.submit()">
+                        <option value="best"       <?php echo $selected_sort==='best'?'selected':''; ?>>המשתלם ביותר</option>
+                        <option value="price_low"  <?php echo $selected_sort==='price_low'?'selected':''; ?>>מחיר: מהנמוך לגבוה</option>
+                        <option value="price_high" <?php echo $selected_sort==='price_high'?'selected':''; ?>>מחיר: מהגבוה לנמוך</option>
+                        <option value="hp"         <?php echo $selected_sort==='hp'?'selected':''; ?>>הספק</option>
+                        <option value="stock"      <?php echo $selected_sort==='stock'?'selected':''; ?>>זמינות במלאי</option>
+                    </select>
+                </label>
             </form>
-        </aside>
+        </div>
+
+        <!-- Row 2: Pills (horizontal-scroll on mobile) -->
+        <div class="gfb-row gfb-row-pills">
+            <div class="gfb-group">
+                <span class="gfb-label">קטגוריה</span>
+                <div class="filter-pills">
+                    <a href="<?php echo build_url(['cat'=>'all']); ?>" class="pill<?php echo $selected_cat==='all'?' on':''; ?>">הכל</a>
+                    <?php foreach ($CATEGORIES as $id => $cat): ?>
+                    <a href="<?php echo build_url(['cat'=>$id]); ?>" class="pill<?php echo $selected_cat===$id?' on':''; ?>"><?php echo $cat['short']; ?></a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <div class="gfb-group">
+                <span class="gfb-label">מנוע</span>
+                <div class="filter-pills">
+                    <a href="<?php echo build_url(['engine'=>'all']); ?>" class="pill<?php echo $selected_engine==='all'?' on':''; ?>">הכל</a>
+                    <?php foreach ($ENGINE_TYPES as $id => $eng): ?>
+                    <a href="<?php echo build_url(['engine'=>$id]); ?>" class="pill pill-engine<?php echo $selected_engine===$id?' on':''; ?>" style="--pill-accent: <?php echo $eng['color']; ?>;">
+                        <span class="glyph"><?php echo $eng['glyph']; ?></span> <?php echo $eng['label']; ?>
+                    </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <div class="gfb-group">
+                <span class="gfb-label">מושבים</span>
+                <div class="filter-pills">
+                    <?php foreach ([['all','הכל'],['4','+4'],['5','5'],['7','+7']] as $opt): list($val,$txt) = $opt; ?>
+                    <a href="<?php echo build_url(['seats'=>$val]); ?>" class="pill<?php echo $selected_seats===$val?' on':''; ?>"><?php echo $txt; ?></a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <form action="grid.php" method="GET" class="gfb-group gfb-budget">
+                <?php foreach (['deal','cat','engine','seats','sort','view'] as $k) {
+                    if (isset($_GET[$k])) echo '<input type="hidden" name="'.htmlspecialchars($k).'" value="'.htmlspecialchars($_GET[$k]).'">';
+                } ?>
+                <span class="gfb-label">תקציב <span class="gfb-budget-val">עד ₪<?php echo number_format($selected_budget); ?></span></span>
+                <input type="range" name="budget" min="2000" max="6000" step="250" value="<?php echo $selected_budget; ?>" class="budget-range" oninput="document.querySelector('.gfb-budget-val').textContent='עד ₪'+Number(this.value).toLocaleString();" onchange="this.form.submit()">
+            </form>
+        </div>
+
+        <!-- Row 3: count + reset -->
+        <div class="gfb-row gfb-row-foot">
+            <div class="gfb-count">מציג <strong><?php echo $count; ?> רכבים</strong> · ליסינג <?php echo $deal_labels[$selected_deal]; ?></div>
+            <?php if ($selected_cat !== 'all' || $selected_engine !== 'all' || $selected_seats !== 'all' || $selected_budget !== 6000): ?>
+            <a href="grid.php?deal=<?php echo $selected_deal; ?>" class="gfb-reset"><?php echo icon('x', 12); ?> איפוס סינונים</a>
+            <?php endif; ?>
+        </div>
+    </section>
+
+    <!-- RESULTS -->
+    <div class="grid-layout single">
+        <!-- sidebar removed — filters moved to top bar -->
 
         <!-- RESULTS -->
         <div class="grid-results<?php echo $selected_view==='list' ? ' view-list' : ''; ?>">

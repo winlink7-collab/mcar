@@ -1,16 +1,14 @@
         <!-- Site Footer -->
         <footer class="site-footer">
             <div class="container">
+                <div class="footer-top">
+                    <a href="index.php" class="logo">
+                        <span class="logo-mark" aria-hidden="true">m</span>
+                        <span>mcar</span>
+                    </a>
+                    <p>פורטל השוואת הליסינג המוביל בישראל. שקיפות, מהירות וחסכון אמיתי לכל רכב.</p>
+                </div>
                 <div class="footer-grid">
-                    <div class="footer-col">
-                        <a href="index.php" class="logo">
-                            <span class="logo-mark" aria-hidden="true">m</span>
-                            <span>mcar</span>
-                        </a>
-                        <p style="margin-top: 20px; color: var(--ink-3); line-height: 1.6; max-width: 30ch;">
-                            פורטל השוואת הליסינג המוביל בישראל. שקיפות, מהירות וחסכון אמיתי לכל רכב.
-                        </p>
-                    </div>
                     <div class="footer-col">
                         <h4>קטגוריות</h4>
                         <nav class="footer-links">
