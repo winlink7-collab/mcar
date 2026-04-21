@@ -54,7 +54,7 @@ require_once __DIR__ . '/functions.php';
             <div class="container header-inner">
                 <a href="index.php" class="logo" aria-label="mcar">
                     <span class="logo-mark" aria-hidden="true">m</span>
-                    <span>mcar<span class="dot">.</span></span>
+                    <span>mcar</span>
                 </a>
                 
                 <nav class="nav-links" id="nav-links">
