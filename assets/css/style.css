@@ -894,16 +894,19 @@ input, select, textarea { font-family: inherit; }
   .gfb-sort-form .toolbar-select { flex-shrink: 0; }
 }
 
-/* --- Unify currency symbol color with price --- */
+/* --- Unify currency symbol color with price amount (same shade) --- */
 .stat-k .sym,
 .deal-price-now .k .sym,
-.deal-save .k,
+.deal-price-now .k .per,
 .pkg-price .sym,
+.pkg-price-term,
 .grid-hero-stats .k .sym,
 .op-stat .k .sym,
 .page-hero-stats strong .sym {
   color: var(--price-color) !important;
 }
+/* Note: .deal-save .k + .deal-save .l intentionally NOT listed above —
+   the savings badge stays green (#059669 / #065f46) as a positive highlight. */
 /* Grid card price symbol — matches the ink color */
 .grid-card .deal-price-now .k .sym { color: var(--ink) !important; }
 .deal-price-now .k { color: var(--ink); }
