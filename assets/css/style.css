@@ -273,12 +273,43 @@ input, select, textarea { font-family: inherit; }
 .tco-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width 1s cubic-bezier(.2,.8,.2,1); }
 .tco-bar-fill.winner { background: linear-gradient(90deg, #10b981, #34d399); box-shadow: 0 0 15px rgba(16,185,129,0.3); }
 
+/* Mobile Sticky Contact Bar (hidden on desktop) */
+.mobile-sticky-bar {
+  display: none;
+  position: fixed; bottom: 16px; left: 12px; right: 12px;
+  z-index: 1000;
+  gap: 8px;
+  padding: 10px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-xl);
+  box-shadow: 0 20px 60px -20px rgba(0,35,102,.35);
+}
+.msb-btn {
+  flex: 1;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 13px 10px; border-radius: var(--r-lg);
+  font-size: 14px; font-weight: 700;
+  min-height: 44px; white-space: nowrap;
+  transition: transform .15s, box-shadow .2s;
+}
+.msb-call { background: linear-gradient(180deg, var(--accent-2), var(--accent)); color: #fff; box-shadow: 0 6px 20px -6px var(--accent); }
+.msb-call:hover, .msb-call:active { transform: scale(1.02); }
+.msb-wa { background: #fff; color: var(--ink); border: 1px solid var(--surface-border-strong); }
+.msb-wa svg { color: #25D366; }
+@media (max-width: 768px) {
+  .mobile-sticky-bar { display: flex; }
+  body { padding-bottom: 84px; } /* space so content isn't hidden */
+}
+
 /* Social Proof Toast */
 .social-proof-toast {
   position: fixed;
   bottom: 20px;
   right: 20px; /* RTL context */
-  z-index: 2000;
+  z-index: 900;
   background: var(--surface);
   border: 1px solid var(--surface-border);
   box-shadow: var(--shadow-2);
@@ -287,19 +318,24 @@ input, select, textarea { font-family: inherit; }
   display: flex;
   align-items: center;
   gap: 12px;
+  max-width: 320px;
   transform: translateY(100px);
   opacity: 0;
   pointer-events: none;
   transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .social-proof-toast.show { transform: translateY(0); opacity: 1; }
-.sp-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; }
-.sp-text { font-size: 15px; color: var(--ink-2); line-height: 1.4; }
+.sp-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.sp-text { font-size: 13px; color: var(--ink-2); line-height: 1.4; }
 .sp-text strong { color: var(--ink); font-weight: 700; }
-.sp-time { font-size: 15px; color: var(--ink-4); font-family: var(--font-mono); margin-top: 2px; }
+.sp-time { font-size: 11px; color: var(--ink-4); font-family: var(--font-mono); margin-top: 2px; }
 
 @media (max-width: 768px) {
-  .social-proof-toast { bottom: 80px; } /* above mobile sticky bar */
+  .social-proof-toast {
+    bottom: 92px; /* above mobile sticky bar */
+    left: 12px; right: 12px;
+    max-width: unset;
+  }
 }
 
 /* Reduced motion */
@@ -1834,46 +1870,50 @@ input, select, textarea { font-family: inherit; }
    Based on live screenshot audit — Android ~400px
    ============================================= */
 
-/* ---- Header: prevent logo + CTA + gear + hamburger overlap ---- */
+/* ---- Header: collapse CTA to icon-only on mobile ---- */
 @media (max-width: 720px) {
-  .header-inner { padding: 10px 4px; gap: 8px; }
+  .header-inner { padding: 8px 4px; gap: 6px; }
   .header-actions { gap: 6px; }
-  .header-actions .btn-primary { padding: 9px 12px; font-size: 13px; }
-  .header-actions .btn-primary svg { width: 12px; height: 12px; }
+  .header-cta { padding: 9px 14px; font-size: 13px; }
+  .header-cta svg { width: 12px; height: 12px; }
   .logo { font-size: 20px; gap: 8px; }
-  .logo-mark { width: 32px; height: 32px; font-size: 16px; }
+  .logo-mark { width: 34px; height: 34px; font-size: 16px; }
 }
-@media (max-width: 480px) {
-  /* Hide the CTA text, keep the icon only */
-  .header-actions .btn-primary span:not(.logo-mark) { display: none; }
-  .header-actions .btn-primary {
-    padding: 10px;
-    width: 44px; height: 44px;
+@media (max-width: 520px) {
+  /* Icon-only CTA — the .btn-label span gets hidden */
+  .header-cta .btn-label { display: none; }
+  .header-cta {
+    padding: 0;
+    width: 40px; height: 40px;
+    min-height: 40px;
     justify-content: center;
     border-radius: 50%;
   }
-  .header-actions .btn-primary svg { margin: 0; }
+  .header-cta svg { width: 16px; height: 16px; }
 }
 @media (max-width: 380px) {
-  /* Hide gear too on very small; keep only logo + hamburger */
-  #tweaks-toggle { display: none; }
+  #tweaks-toggle { display: none; } /* keep only logo + VIP icon + hamburger */
 }
 
-/* ---- H1/H2 overflow prevention ---- */
+/* ---- H1/H2 overflow prevention + <br> handling ---- */
 @media (max-width: 600px) {
   h1, h2 {
-    word-break: break-word;
+    word-break: normal;
     overflow-wrap: break-word;
     hyphens: auto;
     max-width: 100%;
   }
-  .grad { display: inline-block; max-width: 100%; }
+  .grad { display: inline; }
+  /* Home hero h1 — hide the inline <br> so text flows naturally */
+  .hero-copy h1 br { display: none; }
+  .hero-copy h1 { font-size: clamp(26px, 8vw, 38px) !important; line-height: 1.15; }
+  .hero-sub { font-size: 15px !important; line-height: 1.5 !important; }
+
   .sec-head h2 { font-size: clamp(24px, 6.5vw, 32px) !important; }
-  .pkg-head h2 { font-size: clamp(26px, 7vw, 36px) !important; line-height: 1.1; }
+  .pkg-head h2 { font-size: clamp(24px, 6.5vw, 34px) !important; line-height: 1.15; }
   .grid-hero h1,
-  .page-hero h1 { font-size: clamp(30px, 8vw, 44px) !important; }
-  .op-hero-copy h1 { font-size: clamp(28px, 7vw, 40px) !important; }
-  .about-hero h1 { font-size: clamp(30px, 8vw, 44px) !important; }
+  .page-hero h1 { font-size: clamp(28px, 8vw, 42px) !important; line-height: 1.1; }
+  .op-hero-copy h1 { font-size: clamp(26px, 7.5vw, 38px) !important; line-height: 1.15; }
 }
 
 /* ---- Ensure absolute no horizontal scroll ---- */

@@ -141,15 +141,9 @@
             </ul>
 
             <div class="offer-modal-footer">
-                    <a href="contact.php" class="btn btn-primary btn-sm">
-                        <?php echo icon('sparkle', 14); ?>
-                        קבל הצעה
-                    </a>
-                </div>
-            </div>
-            <!-- Scroll Progress Indicator -->
-            <div id="scroll-progress" style="position: absolute; bottom: 0; right: 0; height: 3px; background: var(--accent); width: 0%; transition: width 0.1s;"></div>
-        </header>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <?php echo icon('sparkle', 16); ?> קבל הצעה
+                </button>
                 <span class="offer-secure">
                     <?php echo icon('shield', 14); ?> המידע מוצפן
                 </span>
@@ -157,26 +151,16 @@
         </form>
     </dialog>
 
-    <!-- Mobile Sticky Contact Bar -->
-    <div class="mobile-only" style="position: fixed; bottom: 20px; left: 20px; right: 20px; z-index: 1000; display: none;">
-        <div class="glass" style="display: flex; gap: 10px; padding: 12px; border-radius: var(--r-xl); box-shadow: var(--shadow-3);">
-            <a href="tel:*4260" class="btn btn-primary" style="flex: 1; justify-content: center;"><?php echo icon('phone', 16); ?> חייג עכשיו</a>
-            <a href="https://wa.me/972524260426" class="btn btn-outline" style="flex: 1; justify-content: center; background: white;"><?php echo icon('whatsapp', 16); ?> וואטסאפ</a>
-        </div>
-    </div>
-
-    <!-- Mobile Sticky Contact Bar -->
-    <div class="mobile-sticky-bar" style="position: fixed; bottom: 20px; left: 20px; right: 20px; z-index: 1000; display: none;">
-        <div class="glass" style="display: flex; gap: 10px; padding: 12px; border-radius: var(--r-xl); box-shadow: var(--shadow-3);">
-            <a href="tel:*4260" class="btn btn-primary" style="flex: 1; justify-content: center;"><?php echo icon('phone', 16); ?> חייג עכשיו</a>
-            <a href="https://wa.me/972524260426" class="btn btn-outline" style="flex: 1; justify-content: center; background: white;"><?php echo icon('whatsapp', 16); ?> וואטסאפ</a>
-        </div>
+    <!-- Mobile Sticky Contact Bar (shown only on mobile) -->
+    <div class="mobile-sticky-bar" aria-hidden="true">
+        <a href="tel:*4260" class="msb-btn msb-call"><?php echo icon('phone', 16); ?> חייג עכשיו</a>
+        <a href="https://wa.me/972524260426" class="msb-btn msb-wa"><?php echo icon('whatsapp', 16); ?> וואטסאפ</a>
     </div>
 
     <!-- Social Proof Toast -->
-    <div class="social-proof-toast" id="sp-toast">
+    <div class="social-proof-toast" id="sp-toast" aria-live="polite">
         <div class="sp-icon"><?php echo icon('sparkle', 16); ?></div>
-        <div>
+        <div class="sp-body">
             <div class="sp-text" id="sp-msg"></div>
             <div class="sp-time">לפני מספר רגעים</div>
         </div>
@@ -184,11 +168,5 @@
 
     <!-- Core Scripts -->
     <script src="assets/js/main.js?v=<?php echo ASSET_VERSION; ?>"></script>
-    
-    <style>
-        @media (max-width: 768px) {
-            .mobile-sticky-bar { display: block !important; }
-        }
-    </style>
 </body>
 </html>
