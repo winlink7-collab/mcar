@@ -94,8 +94,8 @@ if ($is_ajax) {
             <div class="verify-chip"><?php echo icon('verify', 12); ?> מאומת</div>
             <?php endif; ?>
 
-            <div class="deal-art">
-                <?php echo render_car_frame($car, 'sm'); ?>
+            <div class="deal-art" style="overflow: hidden;">
+                <img src="<?php echo car_image_url($car); ?>" alt="<?php echo $car['make'] . ' ' . $car['model']; ?>" style="width: 100%; height: 100%; object-fit: cover; display: block; border-bottom: 1px solid var(--hairline);">
             </div>
 
             <div class="deal-body">
@@ -301,8 +301,8 @@ if ($is_ajax) {
                     <div class="verify-chip"><?php echo icon('verify', 12); ?> מאומת</div>
                     <?php endif; ?>
 
-                    <div class="deal-art">
-                        <?php echo render_car_frame($car, 'sm'); ?>
+                    <div class="deal-art" style="overflow: hidden;">
+                        <img src="<?php echo car_image_url($car); ?>" alt="<?php echo $car['make'] . ' ' . $car['model']; ?>" style="width: 100%; height: 100%; object-fit: cover; display: block; border-bottom: 1px solid var(--hairline);">
                     </div>
 
                     <div class="deal-body">
