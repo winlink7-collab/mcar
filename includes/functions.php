@@ -109,14 +109,29 @@ function render_car_frame($car, $size = 'lg') {
 }
 
 /**
- * Build a placeholder car image URL based on the car's engine color + brand.
+ * Build a high-quality car image URL mapped from premium Unsplash car photography.
  */
 function car_image_url($car, $w = 600, $h = 400) {
-    global $ENGINE_TYPES;
-    $color = isset($ENGINE_TYPES[$car['engine']]['color']) ? $ENGINE_TYPES[$car['engine']]['color'] : '#0f766e';
-    $bg = ltrim($color, '#');
-    $text = urlencode($car['make'] . ' ' . $car['model']);
-    return "https://placehold.co/{$w}x{$h}/{$bg}/ffffff?text={$text}&font=montserrat";
+    // Map curated, stunning high-resolution Unsplash car photography IDs
+    $photo_map = [
+        'aurora-gt'   => '1605559424843-9e4c228bf1c2', // Mercedes luxury
+        'nova-prime'  => '1563720223185-11003d516935', // Premium SUV vibe
+        'stellar-s'   => '1618843479313-40f8afb4b4d8', // Sleek dark BMW
+        'helix-rs'    => '1549317661-bd32c8ce0db2', // Audi sport front
+        'orion-e'     => '1542282088-fe8426682b8f', // White luxury sedan
+        'lumen-ev'    => '1617788138017-80ad40651399', // Modern EV style
+        'meridian-x'  => '1552519507-da3b142c6e3d', // Sports coupe back
+        'atlas-q'     => '1519641471654-76ce0107ad1b', // Large black SUV 
+        'zenith-rv'   => '1616455579100-2ceaa4eb2d37', // Aggressive SUV
+        'vertex-r'    => '1617531653332-bd46c24f2068', // Metallic sedan
+        'flux-e8'     => '1503371062146-522ac64e7c37', // Future concept/EV Look
+        'pulse-gts'   => '1583121274602-3e2820c69888'  // Hypercar/Exotic
+    ];
+
+    $photo_id = isset($photo_map[$car['id']]) ? $photo_map[$car['id']] : '1550355291-bbee04a92027';
+    
+    // Serve via Unsplash with dynamic sizing, cropping, and optimization
+    return "https://images.unsplash.com/photo-{$photo_id}?auto=format&fit=crop&q=80&w={$w}&h={$h}";
 }
 
 /**
