@@ -164,12 +164,6 @@ if ($is_ajax) {
             <h1>מצא את העסקה<br>ה<span class="grad">משתלמת ביותר</span><br>בענף הרכב הישראלי.</h1>
             <p>סנן לפי תקציב, קטגוריה ומנוע. בחר עד 3 רכבים להשוואה צד-בצד — כולל מחשבון תשלום חי ומחירי TCO ל-5 שנים.</p>
         </div>
-        <div class="grid-hero-stats">
-            <div class="stat"><div class="k"><?php echo $count; ?></div><div class="l">רכבים תואמים</div></div>
-            <div class="stat"><div class="k"><span class="sym">₪</span><?php echo number_format($min_price); ?></div><div class="l">הזול ביותר / חודשי</div></div>
-            <div class="stat"><div class="k"><span class="sym">₪</span><?php echo number_format($avg_price); ?></div><div class="l">ממוצע בתצוגה</div></div>
-            <div class="stat"><div class="k">0<span class="sym">/3</span></div><div class="l">נבחרו להשוואה</div></div>
-        </div>
     </section>
 
     <!-- TOOLBAR -->

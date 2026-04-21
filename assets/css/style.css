@@ -1383,7 +1383,6 @@ input, select, textarea { font-family: inherit; }
 }
 
 .grid-hero {
-  display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: end;
   padding: 0 0 32px; margin-bottom: 32px;
   border-bottom: 1px solid var(--hairline);
 }
