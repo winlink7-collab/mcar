@@ -1684,20 +1684,32 @@ input, select, textarea { font-family: inherit; }
 }
 
 @media (max-width: 600px) {
+  /* Symmetric 2x2 footer grid — all columns equal width */
   .footer-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 28px 20px;
+    gap: 32px 20px;
+    align-items: start;
   }
-  .footer-col:first-child { grid-column: 1 / -1; }
+  .footer-col:first-child {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--hairline);
+    margin-bottom: 8px;
+  }
+  .footer-col:first-child .logo { justify-content: center; }
+  .footer-col:first-child p { margin-inline: auto; }
   .footer-col h4 { margin-bottom: 14px; font-size: 13px; }
   .footer-links { gap: 10px; }
   .footer-link { font-size: 14px; }
   .search-grid { grid-template-columns: 1fr; }
   .search-submit { grid-column: span 1; }
+  /* Center copyright row vertically on mobile */
+  .site-footer .hair + div { justify-content: center; text-align: center; }
 }
 @media (max-width: 380px) {
-  .footer-grid { grid-template-columns: 1fr; }
-  .footer-col:first-child { grid-column: span 1; }
+  .footer-grid { grid-template-columns: 1fr 1fr; } /* keep 2-col even on narrow */
+  .footer-grid .footer-col:not(:first-child) { text-align: right; }
 }
 
 
@@ -2044,11 +2056,22 @@ img[data-cover], .cover-img {
   .op-hero-image img { object-fit: cover; }
 }
 
-/* ---- Containers: tighter padding on very small ---- */
+/* ---- Containers: safe gutter on mobile (prevents right-edge cut-off) ---- */
+@media (max-width: 900px) {
+  .container { padding: 0 18px; }
+}
 @media (max-width: 480px) {
-  .container { padding: 0 12px; }
+  .container { padding: 0 16px; } /* Minimum 16px gutter always */
   .hero { padding: 16px 0 40px; }
   .page-hero { padding: 24px 0 32px; margin-bottom: 28px; }
+  /* Protect card contents from reaching edge */
+  .deal-body, .pkg-card, .op-benefit, .op-case, .testi, .feat, .perk,
+  .blog-card, .grid-card .deal-body, .info-cta, .faq-cta, .op-final-cta {
+    padding-left: 18px; padding-right: 18px;
+  }
+}
+@media (max-width: 360px) {
+  .container { padding: 0 14px; }
 }
 
 /* ---- Hero "2026" tag: allow wrap ---- */
@@ -2101,6 +2124,42 @@ img[data-cover], .cover-img {
   .deal-save .k { font-size: 14px; }
   .deal-save .l { font-size: 10px; }
 }
+
+/* ---- Center-align prices on mobile ---- */
+@media (max-width: 600px) {
+  .deal-price-row {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+  }
+  .deal-price-now { text-align: center; width: 100%; align-items: center; }
+  .deal-price-now .l { text-align: center; }
+  .deal-price-now .k { justify-content: center; }
+  .deal-save { text-align: center; align-self: center; }
+
+  .pkg-price-block {
+    justify-content: center;
+    text-align: center;
+  }
+  .pkg-from, .pkg-price, .pkg-price-term { text-align: center; }
+
+  .grid-card .deal-price-now { text-align: center; }
+  .grid-card .deal-price-row { justify-content: center; }
+
+  /* CTA row with single button: center it fully */
+  .deal-cta-row.single, .grid-card-cta.single {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+  .deal-cta-row.single .btn, .grid-card-cta.single .btn {
+    width: 100%; justify-content: center;
+  }
+}
+
+/* Single-CTA layout for removed-compare state (desktop too) */
+.deal-cta-row.single, .grid-card-cta.single { grid-template-columns: 1fr; }
+.deal-cta-row.single .btn, .grid-card-cta.single .btn { justify-content: center; }
 
 /* ---- Stats sym (₪) properly sized ---- */
 @media (max-width: 600px) {

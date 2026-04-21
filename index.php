@@ -104,14 +104,10 @@ $cat_info = $CATEGORIES[$featured_car['category']];
                         <?php endif; ?>
                     </div>
 
-                    <div class="deal-cta-row">
+                    <div class="deal-cta-row single">
                         <a href="contact.php?car=<?php echo $featured_car['id']; ?>" class="btn btn-primary" data-offer-modal data-offer-source="hero-deal">
                             <?php echo icon('sparkle', 14); ?>
                             קבל הצעה מותאמת
-                        </a>
-                        <a href="compare.php" class="btn btn-outline" title="השווה רכבים">
-                            <?php echo icon('swap', 16); ?>
-                            <span>השווה</span>
                         </a>
                     </div>
                 </div>
@@ -253,8 +249,8 @@ $cat_info = $CATEGORIES[$featured_car['category']];
         </div>
 
         <div class="pkg-compare-note">
-            <p><strong>לא בטוחים איזו חבילה מתאימה?</strong><br>השוו עד 3 רכבים צד-בצד עם מחשבון TCO חי שמחשב לכם את עלות הבעלות האמיתית ל־5 שנים.</p>
-            <a href="compare.php" class="btn btn-primary"><?php echo icon('swap', 16); ?> לכלי ההשוואה</a>
+            <p><strong>לא בטוחים איזו חבילה מתאימה?</strong><br>נציג VIP יבנה לכם הצעה אישית תוך 60 שניות — מותאמת בדיוק לצרכים שלכם.</p>
+            <a href="contact.php" class="btn btn-primary" data-offer-modal data-offer-source="pkg-compare-note"><?php echo icon('sparkle', 16); ?> קבל הצעה אישית</a>
         </div>
     </section>
 
