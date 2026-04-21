@@ -152,9 +152,9 @@
     </dialog>
 
     <!-- Mobile Sticky Contact Bar (shown only on mobile) -->
-    <div class="mobile-sticky-bar" aria-hidden="true">
-        <a href="tel:*4260" class="msb-btn msb-call"><?php echo icon('phone', 16); ?> חייג עכשיו</a>
-        <a href="https://wa.me/972524260426" class="msb-btn msb-wa"><?php echo icon('whatsapp', 16); ?> וואטסאפ</a>
+    <div class="mobile-sticky-bar">
+        <a href="tel:*4260" class="msb-btn msb-call"><?php echo icon('phone', 18); ?> חייג עכשיו</a>
+        <a href="https://wa.me/972524260426" class="msb-btn msb-wa" aria-label="צ'אט בוואטסאפ" title="WhatsApp"><?php echo icon('whatsapp', 22); ?></a>
     </div>
 
     <!-- Social Proof Toast -->
