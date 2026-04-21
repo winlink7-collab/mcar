@@ -793,15 +793,6 @@ input, select, textarea { font-family: inherit; }
 /* Mobile-only CTA inside the nav drawer */
 .nav-cta {
   display: none; /* shown only on mobile via media query */
-  align-items: center; justify-content: center; gap: 8px;
-  padding: 14px 20px;
-  border-radius: var(--r-lg);
-  font-weight: 800; font-size: 16px;
-  background: linear-gradient(180deg, var(--accent-2), var(--accent));
-  color: #fff !important;
-  box-shadow: 0 8px 20px -8px var(--accent), inset 0 1px 0 rgba(255,255,255,.25);
-  margin-bottom: 8px;
-  text-align: center;
 }
 .nav-cta:hover, .nav-cta:active { transform: scale(1.01); }
 
@@ -1589,11 +1580,11 @@ input, select, textarea { font-family: inherit; }
     top: 80px; right: 0; left: 0;
     flex-direction: column;
     align-items: stretch;
-    gap: 6px;
+    gap: 0;
     background: var(--surface);
     border-top: 1px solid var(--hairline);
     border-bottom: 1px solid var(--hairline);
-    padding: 14px 16px 18px;
+    padding: 18px 20px 20px;
     box-shadow: var(--shadow-2);
     transform: translateY(-8px);
     opacity: 0;
@@ -1605,15 +1596,36 @@ input, select, textarea { font-family: inherit; }
     opacity: 1;
     pointer-events: auto;
   }
+  /* Hide the header-actions VIP button; it moves into the drawer */
+  .header-cta { display: none !important; }
+
+  /* CTA inside drawer — top, centered, full-width, prominent */
+  .nav-cta {
+    display: flex !important;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 20px;
+    margin: 0 0 18px 0;
+    border-radius: 14px;
+    font-family: var(--font-display);
+    font-weight: 800; font-size: 17px;
+    background: linear-gradient(180deg, var(--accent-2), var(--accent));
+    color: #fff !important;
+    text-align: center;
+    box-shadow: 0 12px 28px -10px var(--accent), inset 0 1px 0 rgba(255,255,255,.3);
+    text-decoration: none;
+  }
+
+  /* Nav links list under the CTA */
   .nav-link {
     padding: 14px 8px;
     border-bottom: 1px solid var(--hairline);
     font-size: 16px;
+    text-align: right;
   }
   .nav-link:last-child { border-bottom: none; }
-  .nav-cta { display: inline-flex; } /* show the CTA inside the drawer */
-  /* Hide the header-actions VIP button when the mobile drawer is active */
-  .header-cta { display: none !important; }
 }
 
 @media (max-width: 600px) {
