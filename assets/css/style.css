@@ -790,6 +790,38 @@ input, select, textarea { font-family: inherit; }
 .nav-link:hover { color: var(--accent); }
 .nav-link.active { color: var(--accent); }
 
+/* Scroll progress with moving car */
+.scroll-progress-track {
+  position: absolute;
+  bottom: -14px; right: 0; left: 0;
+  height: 28px;
+  pointer-events: none;
+  z-index: 10;
+}
+.scroll-progress-bar {
+  position: absolute;
+  bottom: 8px; right: 0;
+  height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 10px color-mix(in oklab, var(--accent) 60%, transparent);
+  border-radius: 2px;
+  transition: width .15s cubic-bezier(.2,.8,.2,1);
+}
+.scroll-progress-car {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 32px; height: 14px;
+  transform: translateX(50%); /* pivot on the edge of the bar */
+  color: var(--accent);
+  transition: right .15s cubic-bezier(.2,.8,.2,1);
+  filter: drop-shadow(0 2px 4px color-mix(in oklab, var(--accent) 50%, transparent));
+}
+.scroll-progress-car svg { width: 100%; height: 100%; display: block; }
+@media (max-width: 600px) {
+  .scroll-progress-car { width: 26px; height: 12px; }
+}
+
 /* Mobile-only CTA inside the nav drawer */
 .nav-cta {
   display: none; /* shown only on mobile via media query */

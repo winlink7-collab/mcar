@@ -146,14 +146,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Scroll Progress Indicator Logic
+    // Scroll Progress Indicator + moving car
     const progressLine = document.getElementById('scroll-progress');
+    const progressCar = document.getElementById('scroll-progress-car');
     if (progressLine) {
-        window.addEventListener('scroll', () => {
-            const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (window.scrollY / windowHeight) * 100;
-            progressLine.style.width = scrolled + '%';
-        });
+        const updateProgress = () => {
+            const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            if (h <= 0) return;
+            const pct = Math.max(0, Math.min(100, (window.scrollY / h) * 100));
+            progressLine.style.width = pct + '%';
+            if (progressCar) progressCar.style.right = pct + '%';
+        };
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        window.addEventListener('resize', updateProgress);
+        updateProgress();
     }
 
     // Scroll effect for header

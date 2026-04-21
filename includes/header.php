@@ -83,8 +83,26 @@ require_once __DIR__ . '/functions.php';
                     </button>
                 </div>
             </div>
-            <!-- Scroll Progress Indicator -->
-            <div id="scroll-progress" style="position: absolute; bottom: 0; right: 0; height: 3px; background: var(--accent); width: 0%; transition: width 0.1s; z-index: 10;"></div>
+            <!-- Scroll Progress Indicator with moving car -->
+            <div class="scroll-progress-track" aria-hidden="true">
+                <div id="scroll-progress" class="scroll-progress-bar"></div>
+                <div id="scroll-progress-car" class="scroll-progress-car">
+                    <svg viewBox="0 0 48 22" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="spcBody" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0" stop-color="var(--accent-2)"/>
+                                <stop offset="1" stop-color="var(--accent)"/>
+                            </linearGradient>
+                        </defs>
+                        <path d="M3 12 Q5 10 9 9 L13 4 Q15 2.5 18 2.5 L30 2.5 Q33 2.5 35 4 L39 9 Q43 10 44 13 L44 15 Q44 16 43 16 L5 16 Q3.5 16 3.5 15 Z" fill="url(#spcBody)"/>
+                        <path d="M14 5.5 L29 5.5 Q31 5.5 32.5 6.8 L36 9 L13 9 L14 5.5Z" fill="rgba(255,255,255,0.55)"/>
+                        <circle cx="11" cy="17" r="3.2" fill="#0a1740"/>
+                        <circle cx="11" cy="17" r="1.4" fill="#c9d0e0"/>
+                        <circle cx="37" cy="17" r="3.2" fill="#0a1740"/>
+                        <circle cx="37" cy="17" r="1.4" fill="#c9d0e0"/>
+                    </svg>
+                </div>
+            </div>
         </header>
 
         <!-- Main Content Area -->
