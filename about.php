@@ -19,25 +19,19 @@ $TEAM = [
 
 <main class="page-enter container" style="padding: 40px 0 80px;">
     <!-- HERO -->
-    <section style="display: grid; grid-template-columns: 1.25fr 1fr; gap: 56px; align-items: center; padding: 40px 0 80px;">
-        <div>
-            <div class="eyebrow" style="margin-bottom: 18px;">אודות mcar</div>
-            <h1 style="font-size: clamp(48px, 6vw, 88px); font-weight: 900; line-height: 1; letter-spacing: -0.045em;">
-                בנינו את הפלטפורמה שהיינו רוצים <span class="grad" style="background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%); -webkit-background-clip: text; background-clip: text; color: transparent;">ללקוחות שלנו</span>.
-            </h1>
-            <p style="margin-top: 26px; font-size: 20px; line-height: 1.55; color: var(--ink-2); max-width: 52ch;">
-                mcar הוא פורטל ההשוואה הבלתי תלוי הגדול בישראל לליסינג ורכישת רכב.
-                לא מוכרים רכבים — עוזרים לבחור. אין אינטרס בעסקה מסוימת, יש אינטרס בעסקה הנכונה עבורך.
-            </p>
+    <section class="about-hero">
+        <div class="about-hero-copy">
+            <div class="eyebrow" style="margin-bottom: 16px;">אודות mcar</div>
+            <h1>בנינו את הפלטפורמה שהיינו רוצים <span class="grad">ללקוחות שלנו</span>.</h1>
+            <p>mcar הוא פורטל ההשוואה הבלתי תלוי הגדול בישראל לליסינג ורכישת רכב. לא מוכרים רכבים — עוזרים לבחור. אין אינטרס בעסקה מסוימת, יש אינטרס בעסקה הנכונה עבורך.</p>
         </div>
-        <div style="aspect-ratio: 4/5; border-radius: var(--r-2xl); overflow: hidden; box-shadow: var(--shadow-3); position: relative;">
+        <div class="about-hero-image">
             <img src="assets/img/interior_lifestyle.png"
                  alt="mcar luxury interior lifestyle"
-                 loading="lazy"
-                 style="width: 100%; height: 100%; object-fit: cover; display: block;">
-            <div style="position: absolute; inset: auto 20px 20px 20px; padding: 16px 20px; background: rgba(10,23,64,0.85); backdrop-filter: blur(10px); border-radius: var(--r-lg); color: #fff;">
-                <div style="font-size: 14px; opacity: 0.85; font-family: var(--font-mono); letter-spacing: .08em; text-transform: uppercase;">קצה הטכנולוגיה. חוויית הנהיגה.</div>
-                <div style="font-size: 18px; font-weight: 800; margin-top: 4px;">תל אביב · מודל עסקי חדש</div>
+                 loading="lazy">
+            <div class="about-hero-badge">
+                <div class="about-hero-badge-eyebrow">קצה הטכנולוגיה. חוויית הנהיגה.</div>
+                <div class="about-hero-badge-title">תל אביב · מודל עסקי חדש</div>
             </div>
         </div>
     </section>
