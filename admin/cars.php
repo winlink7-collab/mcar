@@ -28,8 +28,9 @@ admin_header('רכבים');
 ?>
 <h1>רכבים <span style="color:#5a6892;font-size:16px;font-weight:500">(<?php echo count($rows); ?>)</span></h1>
 
-<div class="alert alert-info">
-    💡 <strong>טיפ:</strong> שינוי מחיר נכנס לתוקף מיידית באתר. כדי להוסיף רכב חדש או לערוך פרטים מורחבים, ערוך ישירות ב-phpMyAdmin.
+<div style="display: flex; gap: 10px; margin-bottom: 20px;">
+    <a href="car_edit.php" class="btn btn-primary">➕ הוסף רכב חדש</a>
+    <span style="color:#5a6892;font-size:13px;align-self:center;">💡 שינוי מחיר נכנס מיידית. לעריכה מלאה — לחץ על "ערוך מלא"</span>
 </div>
 
 <div class="card" style="padding: 0; overflow: hidden;">
@@ -52,8 +53,11 @@ admin_header('רכבים');
             <td><input type="number" name="operational" value="<?php echo (int)$monthly['operational']; ?>" style="width:90px;padding:6px 8px;border:1px solid rgba(0,35,102,.14);border-radius:6px;font-family:JetBrains Mono;"></td>
             <td><input type="number" name="purchase" value="<?php echo (int)$monthly['purchase']; ?>" style="width:110px;padding:6px 8px;border:1px solid rgba(0,35,102,.14);border-radius:6px;font-family:JetBrains Mono;"></td>
             <td><span class="badge <?php echo $r['active'] ? 'badge-qualified' : 'badge-lost'; ?>"><?php echo $r['active'] ? 'פעיל' : 'מוסתר'; ?></span></td>
-            <td><button type="submit" class="btn btn-primary" style="font-size:12px;padding:6px 10px;">שמור</button></td>
+            <td style="display:flex;gap:4px;">
+                <button type="submit" class="btn btn-primary" style="font-size:12px;padding:6px 10px;">שמור מחיר</button>
         </form>
+                <a href="car_edit.php?id=<?php echo urlencode($r['id']); ?>" class="btn" style="font-size:12px;padding:6px 10px;">ערוך מלא</a>
+            </td>
     </tr>
     <?php endforeach; ?>
     </tbody>

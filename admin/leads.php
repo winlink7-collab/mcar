@@ -26,10 +26,11 @@ admin_header('לידים');
 ?>
 <h1>לידים <span style="color:#5a6892;font-size:16px;font-weight:500">(<?php echo count($rows); ?>)</span></h1>
 
-<div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+<div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; align-items: center;">
     <?php foreach (['all'=>'הכל','new'=>'חדשים','contacted'=>'יצרנו קשר','qualified'=>'מתאים','closed'=>'סגור','lost'=>'אבוד'] as $k=>$v): ?>
     <a href="?status=<?php echo $k; ?>" class="btn <?php echo $filter===$k?'btn-primary':''; ?>"><?php echo $v; ?></a>
     <?php endforeach; ?>
+    <a href="leads_export.php" class="btn" style="margin-right: auto;">📥 ייצא ל-CSV</a>
 </div>
 
 <div class="card" style="padding: 0; overflow: hidden;">

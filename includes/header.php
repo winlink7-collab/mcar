@@ -1,6 +1,17 @@
 <?php
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/functions.php';
+require_once __DIR__ . '/cms.php';
+
+// Allow current page to override hero from DB by setting $cms_slug
+if (isset($cms_slug)) {
+    $cms_page = page($cms_slug);
+    if ($cms_page) {
+        if (!isset($page_title) && !empty($cms_page['seo_title'])) $page_title = null; // use DB seo_title below
+        if (!empty($cms_page['seo_title']))       $page_title       = $cms_page['seo_title'];
+        if (!empty($cms_page['seo_description'])) $page_description = $cms_page['seo_description'];
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="he" dir="rtl" data-mode="light" data-accent="teal" data-radius="large">
@@ -42,6 +53,21 @@ require_once __DIR__ . '/functions.php';
     <?php if (isset($page_styles)): ?>
     <style><?php echo $page_styles; ?></style>
     <?php endif; ?>
+
+    <!-- Site-wide Open Graph image (from Settings) -->
+    <?php $_og = setting('og_default_image'); if ($_og): ?>
+    <meta property="og:image" content="<?php echo htmlspecialchars($_og); ?>">
+    <?php endif; ?>
+
+    <!-- Google Tag Manager (from Settings) -->
+    <?php $_gtm = setting('gtm_id'); if ($_gtm): ?>
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','<?php echo htmlspecialchars($_gtm); ?>');</script>
+    <?php endif; ?>
+
+    <!-- Custom <head> scripts (from Settings) -->
+    <?php $_head = setting('head_scripts'); if ($_head): ?>
+    <?php echo $_head; ?>
+    <?php endif; ?>
 </head>
 <body>
     <!-- Background elements -->
@@ -63,11 +89,24 @@ require_once __DIR__ . '/functions.php';
                         <?php echo icon('sparkle', 16); ?>
                         קבל הצעת VIP
                     </a>
-                    <a href="index.php" class="nav-link <?php echo active_class('index'); ?>">דף הבית</a>
-                    <a href="about.php" class="nav-link <?php echo active_class('about'); ?>">אודות</a>
-                    <a href="grid.php" class="nav-link <?php echo active_class('grid'); ?>">רכבים</a>
-                    <a href="operational.php" class="nav-link <?php echo active_class('operational'); ?>">ליסינג תפעולי</a>
-                    <a href="contact.php" class="nav-link <?php echo active_class('contact'); ?>">צור קשר</a>
+                    <?php
+                    // Pull header items from DB (falls back to defaults if DB not connected)
+                    $hdr_items = menu_items('header');
+                    if (empty($hdr_items)) {
+                        $hdr_items = [
+                            ['label'=>'דף הבית','url'=>'index.php','target'=>'_self'],
+                            ['label'=>'אודות','url'=>'about.php','target'=>'_self'],
+                            ['label'=>'רכבים','url'=>'grid.php','target'=>'_self'],
+                            ['label'=>'ליסינג תפעולי','url'=>'operational.php','target'=>'_self'],
+                            ['label'=>'צור קשר','url'=>'contact.php','target'=>'_self'],
+                        ];
+                    }
+                    foreach ($hdr_items as $item):
+                        $slug = basename($item['url'], '.php');
+                        if ($slug === 'index') $slug = 'index';
+                    ?>
+                    <a href="<?php echo htmlspecialchars($item['url']); ?>" class="nav-link <?php echo active_class($slug); ?>" target="<?php echo $item['target'] ?? '_self'; ?>"><?php echo htmlspecialchars($item['label']); ?></a>
+                    <?php endforeach; ?>
                 </nav>
 
                 <div class="header-actions">

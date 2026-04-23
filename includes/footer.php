@@ -8,6 +8,11 @@
                     </a>
                     <p>פורטל השוואת הליסינג המוביל בישראל. שקיפות, מהירות וחסכון אמיתי לכל רכב.</p>
                 </div>
+                <?php
+                require_once __DIR__ . '/cms.php';
+                $foot_company = menu_items('footer_company');
+                $foot_support = menu_items('footer_support');
+                ?>
                 <div class="footer-grid">
                     <div class="footer-col">
                         <h4>קטגוריות</h4>
@@ -20,19 +25,27 @@
                     <div class="footer-col">
                         <h4>חברה</h4>
                         <nav class="footer-links">
+                            <?php if (!empty($foot_company)): foreach ($foot_company as $it): ?>
+                            <a href="<?php echo htmlspecialchars($it['url']); ?>" class="footer-link" target="<?php echo $it['target']; ?>"><?php echo htmlspecialchars($it['label']); ?></a>
+                            <?php endforeach; else: ?>
                             <a href="about.php" class="footer-link">אודותינו</a>
                             <a href="contact.php" class="footer-link">צור קשר</a>
                             <a href="careers.php" class="footer-link">קריירה</a>
                             <a href="blog.php" class="footer-link">בלוג</a>
+                            <?php endif; ?>
                         </nav>
                     </div>
                     <div class="footer-col">
                         <h4>תמיכה</h4>
                         <nav class="footer-links">
+                            <?php if (!empty($foot_support)): foreach ($foot_support as $it): ?>
+                            <a href="<?php echo htmlspecialchars($it['url']); ?>" class="footer-link" target="<?php echo $it['target']; ?>"><?php echo htmlspecialchars($it['label']); ?></a>
+                            <?php endforeach; else: ?>
                             <a href="faq.php" class="footer-link">שאלות נפוצות</a>
                             <a href="terms.php" class="footer-link">תנאי שימוש</a>
                             <a href="privacy.php" class="footer-link">פרטיות</a>
                             <a href="accessibility.php" class="footer-link">נגישות</a>
+                            <?php endif; ?>
                         </nav>
                     </div>
                 </div>
@@ -44,9 +57,20 @@
                         © <?php echo date('Y'); ?> mcar Israel. כל הזכויות שמורות.
                     </div>
                     <div style="display: flex; gap: 20px; color: var(--ink-4);">
-                        <a href="#" title="Facebook" aria-label="Facebook"><?php echo icon('facebook', 18); ?></a>
-                        <a href="#" title="Instagram" aria-label="Instagram"><?php echo icon('instagram', 18); ?></a>
-                        <a href="#" title="LinkedIn" aria-label="LinkedIn"><?php echo icon('linkedin', 18); ?></a>
+                        <?php
+                        $socials = social_links_all();
+                        if (empty($socials)) {
+                            $socials = [
+                                ['platform'=>'Facebook','url'=>'#','icon'=>'facebook'],
+                                ['platform'=>'Instagram','url'=>'#','icon'=>'instagram'],
+                                ['platform'=>'LinkedIn','url'=>'#','icon'=>'linkedin'],
+                            ];
+                        }
+                        foreach ($socials as $sl):
+                            $href = !empty($sl['url']) && $sl['url'] !== '#' ? $sl['url'] : '#';
+                        ?>
+                        <a href="<?php echo htmlspecialchars($href); ?>" title="<?php echo htmlspecialchars($sl['platform']); ?>" aria-label="<?php echo htmlspecialchars($sl['platform']); ?>" <?php echo $href !== '#' ? 'target="_blank" rel="noopener"' : ''; ?>><?php echo icon($sl['icon'], 18); ?></a>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>
@@ -170,5 +194,10 @@
 
     <!-- Core Scripts -->
     <script src="assets/js/main.js?v=<?php echo ASSET_VERSION; ?>"></script>
+
+    <!-- Custom <body> scripts (from Settings — Pixel, Hotjar, etc.) -->
+    <?php $_body = setting('body_scripts'); if ($_body): ?>
+    <?php echo $_body; ?>
+    <?php endif; ?>
 </body>
 </html>

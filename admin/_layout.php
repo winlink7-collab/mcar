@@ -56,9 +56,15 @@ function admin_header($title) {
     </div>
     <div class="nav-links">
         <?php $cur = basename($_SERVER['PHP_SELF'], '.php'); ?>
-        <a href="index.php" class="<?php echo $cur==='index'?'on':''; ?>">דשבורד</a>
-        <a href="leads.php" class="<?php echo $cur==='leads'?'on':''; ?>">לידים</a>
-        <a href="cars.php"  class="<?php echo $cur==='cars'?'on':''; ?>">רכבים</a>
+        <a href="index.php"    class="<?php echo $cur==='index'?'on':''; ?>">דשבורד</a>
+        <a href="leads.php"    class="<?php echo $cur==='leads'?'on':''; ?>">לידים</a>
+        <a href="pages.php"    class="<?php echo in_array($cur,['pages','page_edit'])?'on':''; ?>">עמודים</a>
+        <a href="cars.php"     class="<?php echo in_array($cur,['cars','car_edit'])?'on':''; ?>">רכבים</a>
+        <a href="packages.php" class="<?php echo $cur==='packages'?'on':''; ?>">חבילות</a>
+        <a href="faq.php"      class="<?php echo $cur==='faq'?'on':''; ?>">שאלות נפוצות</a>
+        <a href="menu.php"     class="<?php echo $cur==='menu'?'on':''; ?>">תפריט/פוטר</a>
+        <a href="media.php"    class="<?php echo $cur==='media'?'on':''; ?>">מדיה</a>
+        <a href="settings.php" class="<?php echo $cur==='settings'?'on':''; ?>">הגדרות</a>
     </div>
     <div class="nav-actions">
         <a href="../" target="_blank">לאתר ↗</a>

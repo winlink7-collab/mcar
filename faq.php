@@ -1,9 +1,30 @@
 <?php
+$cms_slug = 'faq';
 $page_title = 'שאלות נפוצות';
 $page_description = 'תשובות לשאלות הנפוצות על ליסינג פרטי, תפעולי, רכבים חשמליים, חוזים, תשלום ותחזוקה.';
+require_once 'includes/cms.php';
 require_once 'includes/header.php';
 
-$FAQ_GROUPS = [
+// Try to load FAQ from DB; fall back to hardcoded if DB missing.
+$DB_FAQ_GROUPS = faq_groups_all();
+if (!empty($DB_FAQ_GROUPS)) {
+    $FAQ_GROUPS = [];
+    foreach ($DB_FAQ_GROUPS as $g) {
+        $items = [];
+        foreach (faq_items_by_group($g['id']) as $it) {
+            $items[] = ['q' => $it['question'], 'a' => $it['answer']];
+        }
+        $FAQ_GROUPS[] = [
+            'id'    => $g['id'],
+            'icon'  => $g['icon'] ?: 'sparkle',
+            'title' => $g['label'],
+            'sub'   => $g['sub'] ?: '',
+            'items' => $items,
+        ];
+    }
+}
+
+if (empty($FAQ_GROUPS)) $FAQ_GROUPS = [
     [
         'id' => 'general',
         'icon' => 'sparkle',
