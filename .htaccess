@@ -25,11 +25,21 @@ Options -Indexes
     Require all granted
 </FilesMatch>
 
-# Block direct PHP access in includes/
+# Block direct PHP access in includes/ and migrations/
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteRule ^includes/.*\.php$ - [F,L]
+    RewriteRule ^migrations/.*$ - [F,L]
+    RewriteRule ^\.env - [F,L]
 </IfModule>
+
+# Extra: block .env even without mod_rewrite
+<Files ".env">
+    Require all denied
+</Files>
+<FilesMatch "\.(sql|env|sh)$">
+    Require all denied
+</FilesMatch>
 
 # Cache static assets aggressively
 <IfModule mod_expires.c>

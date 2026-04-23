@@ -112,6 +112,10 @@
             <h3 id="offerModalTitle">הצעה אישית תוך 60 שניות</h3>
             <p class="offer-modal-lead">מלאו שני שדות. נציג בכיר יצור קשר עם הצעה מאומתת מול היבואן — בלי לעבור דרך מוקדי מכירות.</p>
 
+            <?php
+            require_once __DIR__ . '/security.php';
+            echo csrf_field();
+            ?>
             <input type="hidden" name="source" id="offerModalSource" value="modal">
 
             <div class="offer-field-row">

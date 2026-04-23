@@ -24,11 +24,17 @@ access_log
 php_errors.log
 .phpunit.result.cache
 
-# Local config / secrets (none yet but be safe)
+# Local config / secrets — NEVER commit real .env
 .env
 .env.local
+.env.production
 config.local.php
 includes/config.local.php
+
+# Lead exports / database backups
+exports/
+backups/
+*.sql.gz
 
 # Cache / temp
 *.tmp

@@ -1,10 +1,51 @@
 <?php
-require_once 'includes/header.php';
+require_once 'includes/db.php';
+require_once 'includes/mail.php';
+require_once 'includes/security.php';
+start_session_once();
 
 $sent = false;
+$lead_error = null;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $sent = true;
+    // 1. Rate-limit (5 submits per minute per session)
+    if (!rate_limit_ok('lead', 5, 60)) {
+        $lead_error = 'יותר מדי בקשות. נסה שוב בעוד דקה.';
+    }
+    // 2. CSRF check (only if a token was sent — backwards-compatible)
+    elseif (isset($_POST['_csrf']) && !csrf_check()) {
+        $lead_error = 'הטוקן פג תוקף. רענן את הדף ונסה שוב.';
+    }
+    // 3. reCAPTCHA verification (skipped if not configured)
+    elseif (!recaptcha_verify('contact')) {
+        $lead_error = 'בדיקת אבטחה נכשלה. נסה שוב.';
+    }
+    else {
+        $data = [
+            'name'      => clean_str($_POST['name'] ?? '', 120),
+            'phone'     => clean_phone($_POST['phone'] ?? ''),
+            'email'     => clean_email($_POST['email'] ?? ''),
+            'source'    => clean_str($_POST['source'] ?? 'contact-page', 80),
+            'car_id'    => clean_str($_GET['car'] ?? $_POST['car'] ?? '', 60) ?: null,
+            'pkg_id'    => clean_str($_GET['pkg'] ?? $_POST['pkg'] ?? '', 40) ?: null,
+            'deal_type' => clean_str($_POST['deal_type'] ?? '', 40) ?: null,
+            'message'   => clean_str($_POST['message'] ?? '', 2000),
+        ];
+
+        // Minimum validation
+        if (!$data['name'] || !$data['phone']) {
+            $lead_error = 'חסרים שדות חובה: שם וטלפון.';
+        } else {
+            // 4. Save to DB (returns false silently if DB not configured)
+            $lead_id = save_lead($data);
+            // 5. Send email notification (non-blocking — succeed even if mail fails)
+            @send_lead_email($data);
+            $sent = true;
+        }
+    }
 }
+
+require_once 'includes/header.php';
 
 $OFFICE_INFO = [
     'tel_aviv' => [
@@ -83,6 +124,13 @@ $OFFICE_INFO = [
             </div>
             <?php else: ?>
             <form action="contact.php" method="POST" style="background: var(--surface); border: 1px solid var(--surface-border); border-radius: var(--r-xl); overflow: hidden; box-shadow: var(--shadow-1);">
+                <?php echo csrf_field(); ?>
+                <input type="hidden" name="source" value="contact-page">
+                <?php if ($lead_error): ?>
+                <div style="padding: 14px 24px; background: #fef2f2; color: #b91c1c; border-bottom: 1px solid #fecaca; font-weight: 600; font-size: 14px;">
+                    <?php echo htmlspecialchars($lead_error); ?>
+                </div>
+                <?php endif; ?>
                 <div class="form-progress" style="height: 3px; background: var(--bg-2); position: relative;">
                     <div style="position: absolute; top: 0; right: 0; height: 100%; width: 33%; background: var(--accent); transition: width 0.3s;"></div>
                 </div>
