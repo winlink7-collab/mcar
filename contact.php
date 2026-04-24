@@ -1,6 +1,7 @@
 <?php
 require_once 'includes/db.php';
 require_once 'includes/mail.php';
+require_once 'includes/whatsapp.php';
 require_once 'includes/security.php';
 start_session_once();
 
@@ -38,8 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // 4. Save to DB (returns false silently if DB not configured)
             $lead_id = save_lead($data);
-            // 5. Send email notification (non-blocking — succeed even if mail fails)
+            // 5. Send notifications (non-blocking — succeed even if any fail)
             @send_lead_email($data);
+            @send_lead_whatsapp($data);
             $sent = true;
         }
     }

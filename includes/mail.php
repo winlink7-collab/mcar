@@ -30,8 +30,21 @@ function send_lead_email($data) {
 
     $subject = "ליד חדש מ-mcar · {$name}";
 
+    // WhatsApp quick-reply link (wa.me format requires international, no leading 0)
+    $phone_clean = preg_replace('/[^0-9]/', '', $phone);
+    if (strlen($phone_clean) > 0 && $phone_clean[0] === '0') $phone_clean = '972' . substr($phone_clean, 1);
+    $wa_text = rawurlencode("שלום {$name}! 👋 פניתם אלינו ב-mcar. כאן נציג VIP שיצור איתכם קשר — מתי נוח לדבר?");
+    $wa_link = "https://wa.me/{$phone_clean}?text={$wa_text}";
+
     $body = "<!doctype html><html lang=he dir=rtl><body style=\"font-family:system-ui,sans-serif;max-width:600px;margin:20px auto;padding:20px;color:#0a1740\">
-<h2 style=\"color:#0f766e\">ליד חדש · mcar</h2>
+<h2 style=\"color:#0f766e;margin:0 0 8px\">🔥 ליד חדש · mcar</h2>
+<p style=\"margin:0 0 20px;color:#5a6892;font-size:14px\">התקבלה פנייה באתר. ⚡ לחץ על הכפתור הירוק לתגובה מיידית ב-WhatsApp.</p>
+
+<div style=\"margin:20px 0;text-align:center\">
+  <a href=\"{$wa_link}\" style=\"display:inline-block;padding:14px 28px;background:#25D366;color:#fff;text-decoration:none;border-radius:10px;font-weight:700;font-size:15px;box-shadow:0 4px 12px -2px rgba(37,211,102,.4)\">💬 שלח WhatsApp ל-{$name}</a>
+  <a href=\"tel:{$phone}\" style=\"display:inline-block;margin-right:8px;padding:14px 24px;background:#0f766e;color:#fff;text-decoration:none;border-radius:10px;font-weight:700;font-size:15px\">📞 חייג</a>
+</div>
+
 <table style=\"width:100%;border-collapse:collapse;font-size:15px\">
   <tr><td style=\"padding:10px 14px;background:#f4f6fb;font-weight:700;width:140px\">שם מלא</td><td style=\"padding:10px 14px;background:#fff\">{$name}</td></tr>
   <tr><td style=\"padding:10px 14px;background:#f4f6fb;font-weight:700\">טלפון</td><td style=\"padding:10px 14px;background:#fff\"><a href=\"tel:{$phone}\">{$phone}</a></td></tr>

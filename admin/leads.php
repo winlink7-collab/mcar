@@ -37,7 +37,12 @@ admin_header('לידים');
 <table>
     <thead><tr><th>זמן</th><th>שם</th><th>טלפון</th><th>אימייל</th><th>רכב/חבילה</th><th>מקור</th><th>סטטוס</th></tr></thead>
     <tbody>
-    <?php foreach ($rows as $r): ?>
+    <?php foreach ($rows as $r):
+        $phone_clean = preg_replace('/[^0-9]/', '', $r['phone']);
+        // Convert Israeli local (05x…) to international (972…)
+        if (strlen($phone_clean) > 0 && $phone_clean[0] === '0') $phone_clean = '972' . substr($phone_clean, 1);
+        $wa_text = "שלום " . $r['name'] . "! 👋 פניתם אלינו ב-mcar" . ($r['car_id'] ? " לגבי " . $r['car_id'] : '') . ". כאן נציג/ה ה-VIP שיצור/תיצור איתכם קשר. מתי נוח לכם לדבר?";
+    ?>
     <tr>
         <td><?php echo date('d/m/y H:i', strtotime($r['created_at'])); ?></td>
         <td><strong><?php echo htmlspecialchars($r['name']); ?></strong></td>
@@ -46,15 +51,20 @@ admin_header('לידים');
         <td><?php echo htmlspecialchars($r['car_id'] ?: $r['pkg_id'] ?: '—'); ?></td>
         <td><code style="font-size:12px;color:#5a6892;"><?php echo htmlspecialchars($r['source']); ?></code></td>
         <td>
-            <form method="POST" style="display:inline-flex;gap:4px;align-items:center;">
-                <?php echo csrf_field(); ?>
-                <input type="hidden" name="lead_id" value="<?php echo $r['id']; ?>">
-                <select name="status" onchange="this.form.submit()" style="padding:5px 8px;border-radius:6px;border:1px solid rgba(0,35,102,.14);font-size:12px;">
-                    <?php foreach (['new'=>'חדש','contacted'=>'נוצר קשר','qualified'=>'מתאים','closed'=>'סגור','lost'=>'אבוד'] as $k=>$v): ?>
-                    <option value="<?php echo $k; ?>" <?php echo $r['status']===$k?'selected':''; ?>><?php echo $v; ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </form>
+            <div style="display:flex;gap:4px;align-items:center;">
+                <a href="https://wa.me/<?php echo $phone_clean; ?>?text=<?php echo urlencode($wa_text); ?>" target="_blank" title="שלח WhatsApp ללקוח" style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;background:#25D366;color:#fff;border-radius:6px;text-decoration:none;flex-shrink:0;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2a9.96 9.96 0 0 0-8.6 14.94L2 22l5.22-1.36a9.96 9.96 0 0 0 4.82 1.22A9.96 9.96 0 1 0 12.04 2m0 1.67a8.28 8.28 0 0 1 8.3 8.29 8.28 8.28 0 0 1-8.3 8.29 8.24 8.24 0 0 1-4.21-1.15l-.3-.18-3.1.82.83-3.02-.2-.31a8.24 8.24 0 0 1-1.29-4.45 8.28 8.28 0 0 1 8.27-8.29"/></svg>
+                </a>
+                <form method="POST" style="display:inline-flex;gap:4px;align-items:center;">
+                    <?php echo csrf_field(); ?>
+                    <input type="hidden" name="lead_id" value="<?php echo $r['id']; ?>">
+                    <select name="status" onchange="this.form.submit()" style="padding:5px 8px;border-radius:6px;border:1px solid rgba(0,35,102,.14);font-size:12px;">
+                        <?php foreach (['new'=>'חדש','contacted'=>'נוצר קשר','qualified'=>'מתאים','closed'=>'סגור','lost'=>'אבוד'] as $k=>$v): ?>
+                        <option value="<?php echo $k; ?>" <?php echo $r['status']===$k?'selected':''; ?>><?php echo $v; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </form>
+            </div>
         </td>
     </tr>
     <?php endforeach; ?>
