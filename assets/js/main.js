@@ -179,6 +179,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const offerForm = document.getElementById('offerModalForm');
     const offerSource = document.getElementById('offerModalSource');
     const offerName = document.getElementById('offerName');
+    const adminWA = offerModal ? (offerModal.dataset.adminWhatsapp || '') : '';
+
+    // Hijack offer-modal form: save lead in background AND open WhatsApp to admin with customer details
+    if (offerForm && adminWA) {
+        offerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const fd = new FormData(offerForm);
+            const name   = (fd.get('name')   || '').toString().trim();
+            const phone  = (fd.get('phone')  || '').toString().trim();
+            const action = offerForm.getAttribute('action') || 'contact.php';
+
+            // Extract car/pkg/type context from the form's action URL (set when modal opened)
+            let car = '', pkg = '', type = '';
+            try {
+                const u = new URL(action, window.location.href);
+                car  = u.searchParams.get('car')  || '';
+                pkg  = u.searchParams.get('pkg')  || '';
+                type = u.searchParams.get('type') || '';
+            } catch (err) {}
+
+            // Build the WhatsApp message
+            const lines = ['שלום! פניתי דרך mcar 🚗', '', `שם: ${name}`, `טלפון: ${phone}`];
+            if (car)  lines.push(`רכב: ${car}`);
+            if (pkg)  lines.push(`חבילה: ${pkg}`);
+            if (type) lines.push(`סוג: ${type}`);
+            lines.push('', 'אשמח להצעת מחיר. תודה!');
+            const text = lines.join('\n');
+            const waUrl = `https://wa.me/${adminWA}?text=${encodeURIComponent(text)}`;
+
+            // Save lead to DB in background — non-blocking, fire-and-forget
+            try {
+                navigator.sendBeacon ? navigator.sendBeacon(action, fd) : fetch(action, { method: 'POST', body: fd, credentials: 'same-origin', keepalive: true });
+            } catch (err) {}
+
+            // UI feedback then redirect to WhatsApp
+            const submitBtn = offerForm.querySelector('button[type="submit"]');
+            if (submitBtn) { submitBtn.disabled = true; submitBtn.innerHTML = 'פותח WhatsApp...'; }
+            setTimeout(() => { window.location.href = waUrl; }, 200);
+        });
+    }
 
     function openOfferModal(trigger) {
         if (!offerModal || !offerForm) return;

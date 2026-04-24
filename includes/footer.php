@@ -124,7 +124,10 @@
     </dialog>
 
     <!-- VIP Offer Modal (global) -->
-    <dialog class="offer-modal" id="offerModal" aria-labelledby="offerModalTitle">
+    <?php
+    $admin_wa = preg_replace('/[^0-9]/', '', setting('admin_whatsapp', ''));
+    ?>
+    <dialog class="offer-modal" id="offerModal" aria-labelledby="offerModalTitle" data-admin-whatsapp="<?php echo htmlspecialchars($admin_wa); ?>">
         <form method="POST" action="contact.php" class="offer-modal-inner" id="offerModalForm">
             <button type="button" class="offer-modal-close" data-offer-close aria-label="סגור">
                 <?php echo icon('x', 18); ?>
