@@ -37,9 +37,25 @@ foreach ($rows as $r) $groups[$r['group_name']][] = $r;
 
 $group_labels = [
     'contact'   => '📞 פרטי תקשורת',
+    'whatsapp'  => '💬 התראות WhatsApp ללידים חדשים',
     'branding'  => '🎨 מיתוג ושיתוף',
     'analytics' => '📊 אנליטיקה וסקריפטים',
     'general'   => 'כללי',
+];
+
+$group_help = [
+    'whatsapp' => '<strong>מקבלים הודעה ב-WhatsApp שלכם בכל פעם שלקוח משאיר פרטים באתר.</strong>
+        <br><br>
+        <b>הגדרה ב-3 שלבים:</b>
+        <ol style="margin:10px 0;padding-right:22px;line-height:1.8">
+            <li>שמרו במכשיר את המספר <code style="background:#fef3c7;padding:2px 8px;border-radius:5px;font-weight:700;">+34 644 51 95 23</code> (זה הבוט של CallMeBot)</li>
+            <li>שלחו לבוט הזה הודעה ב-WhatsApp בדיוק את הטקסט הבא: <code style="background:#fef3c7;padding:2px 8px;border-radius:5px;direction:ltr;display:inline-block">I allow callmebot to send me messages</code></li>
+            <li>הבוט יענה לכם תוך 1-2 דקות עם <b>API Key</b>. העתיקו אותו ושימו בשדה "CallMeBot API Key" למטה.</li>
+        </ol>
+        <p style="margin:8px 0 0">
+            ✅ אחרי ההגדרה — מלאו <b>מספר WhatsApp שלכם</b> בפורמט <code>+972524260426</code> (עם +972, בלי 0 בתחילת הטלפון), שימו <code>1</code> בשדה ההפעלה, ושמרו.
+        </p>
+        <p style="margin:8px 0 0;color:#0f766e;font-weight:600">בדקו: גלשו לאתר → "קבל הצעת VIP" → מלאו ושלחו → אמורה להגיע הודעה ב-WhatsApp שלכם תוך 5 שניות.</p>',
 ];
 
 admin_header('הגדרות אתר');
@@ -52,6 +68,11 @@ admin_header('הגדרות אתר');
 <?php foreach ($groups as $gname => $items): ?>
 <div class="card" style="margin-bottom: 20px;">
     <h2 style="margin: 0 0 18px; font-size: 17px;"><?php echo $group_labels[$gname] ?? $gname; ?></h2>
+    <?php if (!empty($group_help[$gname])): ?>
+    <div style="background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;padding:14px 18px;border-radius:10px;font-size:13px;line-height:1.6;margin-bottom:20px;">
+        <?php echo $group_help[$gname]; ?>
+    </div>
+    <?php endif; ?>
     <?php foreach ($items as $s): ?>
     <div style="margin-bottom: 18px;">
         <label style="display: block; font-size: 13px; font-weight: 700; color: var(--ink-2); margin-bottom: 6px;">
