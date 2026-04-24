@@ -25,6 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_check()) {
         exit;
     }
 
+    // Handle inline image upload — overrides URL field if file present
+    $uploaded_url = null;
+    if (!empty($_FILES['image_file']['tmp_name'])) {
+        $uploaded_url = handle_image_upload($_FILES['image_file'], $_SESSION['admin_user'] ?? null);
+        if (!$uploaded_url) $message = 'העלאת התמונה נכשלה. בדוק שזה JPG/PNG/WebP עד 10MB.';
+    }
+    $final_image = $uploaded_url ?: trim($_POST['image_url'] ?? '');
+
     $monthly = json_encode([
         'private'     => (int)$_POST['private'],
         'operational' => (int)$_POST['operational'],
@@ -50,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_check()) {
         ':features'    => $features_json,
         ':warranty'    => trim($_POST['warranty']),
         ':delivery'    => trim($_POST['delivery']),
-        ':image_url'   => trim($_POST['image_url']) ?: null,
+        ':image_url'   => $final_image ?: null,
         ':active'      => !empty($_POST['active']) ? 1 : 0,
     ];
 
@@ -95,7 +103,7 @@ admin_header($isNew ? 'רכב חדש' : ($car['make'] . ' ' . $car['model']));
 </h1>
 <?php if ($message): ?><div class="alert alert-info"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
 <?php echo csrf_field(); ?>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
 
@@ -151,12 +159,31 @@ admin_header($isNew ? 'רכב חדש' : ($car['make'] . ' ' . $car['model']));
 </div>
 
 <div class="card" style="grid-column:1/-1;">
-    <h3 style="margin:0 0 14px;font-size:14px;color:#5a6892;">תמונה</h3>
-    <p><label>URL לתמונת הרכב (העלה דרך <a href="media.php" style="color:#0f766e">מדיה</a> והעתק כאן)</label>
-    <input type="text" name="image_url" value="<?php echo htmlspecialchars($car['image_url']??''); ?>" placeholder="/uploads/2026/04/nova-prime.webp" style="width:100%;padding:8px 10px;border:1px solid rgba(0,35,102,.14);border-radius:6px;font-family:JetBrains Mono;font-size:12px;"></p>
-    <?php if (!empty($car['image_url'])): ?>
-    <img src="<?php echo htmlspecialchars($car['image_url']); ?>" style="max-width: 300px; margin-top: 10px; border-radius: 8px;">
-    <?php endif; ?>
+    <h3 style="margin:0 0 14px;font-size:14px;color:#5a6892;">🖼️ תמונת הרכב</h3>
+
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:start;">
+        <div>
+            <?php if (!empty($car['image_url'])): ?>
+                <img src="<?php echo htmlspecialchars($car['image_url']); ?>" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;border:1px solid var(--border);">
+            <?php else: ?>
+                <div style="width:100%;aspect-ratio:4/3;background:var(--bg);border:2px dashed var(--border-strong);border-radius:8px;display:grid;place-items:center;color:var(--ink-4);font-size:13px;">ללא תמונה</div>
+            <?php endif; ?>
+        </div>
+
+        <div>
+            <label style="font-size:13px;color:var(--ink-2);font-weight:600;margin-bottom:6px;">העלה תמונה חדשה</label>
+            <input type="file" name="image_file" accept="image/jpeg,image/png,image/webp,image/gif"
+                   style="width:100%;padding:10px;border:2px dashed var(--border-strong);border-radius:8px;background:var(--bg);cursor:pointer;font-size:13px;">
+            <p style="font-size:12px;color:var(--ink-3);margin:6px 0 16px;">JPG / PNG / WebP / GIF · עד 10MB · ממיר אוטומטית ל-WebP</p>
+
+            <details>
+                <summary style="font-size:12px;color:var(--ink-3);cursor:pointer;padding:6px 0;">או הזן URL ידנית</summary>
+                <input type="text" name="image_url" value="<?php echo htmlspecialchars($car['image_url']??''); ?>"
+                       placeholder="/uploads/2026/04/nova-prime.webp"
+                       style="margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:12px;">
+            </details>
+        </div>
+    </div>
 </div>
 
 </div>

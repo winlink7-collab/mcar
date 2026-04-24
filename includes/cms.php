@@ -131,3 +131,68 @@ function media_save($filename, $original, $mime, $size, $width, $height, $path, 
         return (int)$pdo->lastInsertId();
     } catch (PDOException $e) { return false; }
 }
+
+/**
+ * Handle a single-file upload from $_FILES['key'].
+ * Saves to /uploads/YYYY/MM/, converts to WebP if possible, inserts DB row.
+ * Returns the public URL on success, null on failure.
+ *
+ * @param array $file       $_FILES[key] entry
+ * @param string|null $user admin username for audit
+ * @return string|null      relative URL like "/uploads/2026/04/photo-abc123.webp"
+ */
+function handle_image_upload($file, $user = null) {
+    if (empty($file['tmp_name']) || !is_uploaded_file($file['tmp_name'])) return null;
+    if (($file['error'] ?? 1) !== UPLOAD_ERR_OK) return null;
+
+    $allowed = [
+        'image/jpeg' => 'jpg',
+        'image/png'  => 'png',
+        'image/webp' => 'webp',
+        'image/gif'  => 'gif',
+    ];
+    if (!isset($allowed[$file['type']])) return null;
+    if ($file['size'] > 10 * 1024 * 1024) return null; // 10MB max
+
+    $year  = date('Y');
+    $month = date('m');
+    $dir   = dirname(__DIR__) . "/uploads/{$year}/{$month}";
+    if (!is_dir($dir)) @mkdir($dir, 0755, true);
+
+    $ext  = $allowed[$file['type']];
+    $base = preg_replace('/[^a-z0-9-]/i', '-', pathinfo($file['name'], PATHINFO_FILENAME));
+    $base = substr(strtolower($base), 0, 40) ?: 'img';
+    $name = $base . '-' . substr(md5(uniqid('', true)), 0, 6) . '.' . $ext;
+    $target  = "{$dir}/{$name}";
+    $relPath = "uploads/{$year}/{$month}/{$name}";
+
+    if (!move_uploaded_file($file['tmp_name'], $target)) return null;
+
+    // Dimensions
+    $width = 0; $height = 0;
+    if (function_exists('getimagesize')) {
+        $info = @getimagesize($target);
+        if ($info) { $width = $info[0]; $height = $info[1]; }
+    }
+
+    // WebP conversion when possible
+    if ($ext !== 'webp' && function_exists('imagewebp')) {
+        $webpName   = preg_replace('/\.(jpg|png|gif)$/', '.webp', $name);
+        $webpTarget = "{$dir}/{$webpName}";
+        $img = null;
+        if ($ext === 'jpg') $img = @imagecreatefromjpeg($target);
+        if ($ext === 'png') $img = @imagecreatefrompng($target);
+        if ($ext === 'gif') $img = @imagecreatefromgif($target);
+        if ($img && imagewebp($img, $webpTarget, 82)) {
+            imagedestroy($img);
+            $name    = $webpName;
+            $target  = $webpTarget;
+            $relPath = "uploads/{$year}/{$month}/{$webpName}";
+            $ext     = 'webp';
+        }
+    }
+
+    $url = '/' . $relPath;
+    media_save($name, $file['name'], 'image/' . $ext, filesize($target), $width, $height, $target, $url, '', $user);
+    return $url;
+}

@@ -19,16 +19,20 @@ if (!$isNew) {
 
 $message = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_check()) {
+    // Handle inline image uploads
+    $hero_url = !empty($_FILES['hero_file']['tmp_name']) ? handle_image_upload($_FILES['hero_file'], $_SESSION['admin_user'] ?? null) : null;
+    $og_url   = !empty($_FILES['og_file']['tmp_name'])   ? handle_image_upload($_FILES['og_file'],   $_SESSION['admin_user'] ?? null) : null;
+
     $data = [
         ':slug'    => trim($_POST['slug'] ?? ''),
         ':eyebrow' => trim($_POST['eyebrow'] ?? '') ?: null,
         ':h1'      => trim($_POST['hero_h1'] ?? ''),
         ':lead'    => trim($_POST['hero_lead'] ?? '') ?: null,
-        ':img'     => trim($_POST['hero_image'] ?? '') ?: null,
+        ':img'     => $hero_url ?: (trim($_POST['hero_image'] ?? '') ?: null),
         ':content' => $_POST['content_html'] ?? null,
         ':seo_t'   => trim($_POST['seo_title'] ?? '') ?: null,
         ':seo_d'   => trim($_POST['seo_description'] ?? '') ?: null,
-        ':og'      => trim($_POST['og_image'] ?? '') ?: null,
+        ':og'      => $og_url ?: (trim($_POST['og_image'] ?? '') ?: null),
         ':active'  => !empty($_POST['active']) ? 1 : 0,
     ];
 
@@ -70,7 +74,7 @@ admin_header($isNew ? 'עמוד חדש' : 'עריכת עמוד · ' . ($page['sl
 </h1>
 <?php if ($message): ?><div class="alert alert-info"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
 <?php echo csrf_field(); ?>
 
 <div class="card" style="margin-bottom: 20px;">
@@ -95,9 +99,24 @@ admin_header($isNew ? 'עמוד חדש' : 'עריכת עמוד · ' . ($page['sl
         <textarea name="hero_lead" rows="3" style="width:100%;padding:10px 12px;border:1.5px solid rgba(0,35,102,.14);border-radius:8px;"><?php echo htmlspecialchars($page['hero_lead'] ?? ''); ?></textarea>
     </div>
 
-    <div style="margin-bottom: 14px;"><label style="display:block;font-weight:700;font-size:13px;margin-bottom:5px;">תמונת Hero (URL או נתיב יחסי)</label>
-        <input type="text" name="hero_image" value="<?php echo htmlspecialchars($page['hero_image'] ?? ''); ?>" placeholder="assets/img/photo.png או https://..." style="width:100%;padding:10px 12px;border:1.5px solid rgba(0,35,102,.14);border-radius:8px;font-family:JetBrains Mono;font-size:12px;">
-        <small style="color:#5a6892;">העלה תמונה דרך <a href="media.php" style="color:#0f766e">המדיה</a> והעתק את ה-URL לכאן.</small>
+    <div style="margin-bottom: 14px;"><label style="display:block;font-weight:700;font-size:13px;margin-bottom:5px;">🖼️ תמונת Hero</label>
+        <div style="display:grid;grid-template-columns:160px 1fr;gap:14px;align-items:start;">
+            <div>
+                <?php if (!empty($page['hero_image'])): ?>
+                    <img src="<?php echo htmlspecialchars($page['hero_image']); ?>" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;border:1px solid var(--border);">
+                <?php else: ?>
+                    <div style="width:100%;aspect-ratio:4/3;background:var(--bg);border:2px dashed var(--border-strong);border-radius:8px;display:grid;place-items:center;color:var(--ink-4);font-size:12px;">ללא תמונה</div>
+                <?php endif; ?>
+            </div>
+            <div>
+                <input type="file" name="hero_file" accept="image/*" style="width:100%;padding:10px;border:2px dashed var(--border-strong);border-radius:8px;background:var(--bg);cursor:pointer;font-size:13px;">
+                <p style="font-size:12px;color:var(--ink-3);margin:6px 0 8px;">JPG / PNG / WebP · עד 10MB · המרה אוטומטית ל-WebP</p>
+                <details>
+                    <summary style="font-size:12px;color:var(--ink-3);cursor:pointer;">או URL ידני</summary>
+                    <input type="text" name="hero_image" value="<?php echo htmlspecialchars($page['hero_image'] ?? ''); ?>" placeholder="/uploads/..." style="margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:12px;">
+                </details>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -118,8 +137,24 @@ admin_header($isNew ? 'עמוד חדש' : 'עריכת עמוד · ' . ($page['sl
     <div style="margin-bottom: 14px;"><label style="display:block;font-weight:700;font-size:13px;margin-bottom:5px;">Description (תיאור)</label>
         <textarea name="seo_description" rows="2" maxlength="500" style="width:100%;padding:10px 12px;border:1.5px solid rgba(0,35,102,.14);border-radius:8px;"><?php echo htmlspecialchars($page['seo_description'] ?? ''); ?></textarea>
     </div>
-    <div><label style="display:block;font-weight:700;font-size:13px;margin-bottom:5px;">Open Graph Image (תמונה בשיתוף)</label>
-        <input type="text" name="og_image" value="<?php echo htmlspecialchars($page['og_image'] ?? ''); ?>" placeholder="/uploads/og.jpg" style="width:100%;padding:10px 12px;border:1.5px solid rgba(0,35,102,.14);border-radius:8px;font-family:JetBrains Mono;font-size:12px;">
+    <div><label style="display:block;font-weight:700;font-size:13px;margin-bottom:5px;">🔗 Open Graph Image (תמונה בשיתוף)</label>
+        <div style="display:grid;grid-template-columns:160px 1fr;gap:14px;align-items:start;">
+            <div>
+                <?php if (!empty($page['og_image'])): ?>
+                    <img src="<?php echo htmlspecialchars($page['og_image']); ?>" style="width:100%;aspect-ratio:1.91/1;object-fit:cover;border-radius:8px;border:1px solid var(--border);">
+                <?php else: ?>
+                    <div style="width:100%;aspect-ratio:1.91/1;background:var(--bg);border:2px dashed var(--border-strong);border-radius:8px;display:grid;place-items:center;color:var(--ink-4);font-size:11px;">1200×630</div>
+                <?php endif; ?>
+            </div>
+            <div>
+                <input type="file" name="og_file" accept="image/*" style="width:100%;padding:10px;border:2px dashed var(--border-strong);border-radius:8px;background:var(--bg);cursor:pointer;font-size:13px;">
+                <p style="font-size:12px;color:var(--ink-3);margin:6px 0 8px;">מומלץ: 1200×630px (יחס 1.91:1)</p>
+                <details>
+                    <summary style="font-size:12px;color:var(--ink-3);cursor:pointer;">או URL ידני</summary>
+                    <input type="text" name="og_image" value="<?php echo htmlspecialchars($page['og_image'] ?? ''); ?>" placeholder="/uploads/og.jpg" style="margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:12px;">
+                </details>
+            </div>
+        </div>
     </div>
 </div>
 

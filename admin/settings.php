@@ -9,6 +9,23 @@ if (!$pdo) { admin_header('הגדרות'); echo '<div class="alert alert-warn">D
 $message = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_check()) {
     $pairs = $_POST['s'] ?? [];
+
+    // Handle any file uploads — keys named s_file[setting_key]
+    if (!empty($_FILES['s_file']['tmp_name']) && is_array($_FILES['s_file']['tmp_name'])) {
+        foreach ($_FILES['s_file']['tmp_name'] as $key => $tmp) {
+            if (!$tmp) continue;
+            $file = [
+                'tmp_name' => $tmp,
+                'name'     => $_FILES['s_file']['name'][$key]     ?? 'upload',
+                'type'     => $_FILES['s_file']['type'][$key]     ?? '',
+                'size'     => $_FILES['s_file']['size'][$key]     ?? 0,
+                'error'    => $_FILES['s_file']['error'][$key]    ?? UPLOAD_ERR_NO_FILE,
+            ];
+            $url = handle_image_upload($file, $_SESSION['admin_user'] ?? null);
+            if ($url) $pairs[$key] = $url;
+        }
+    }
+
     if (settings_save($pairs)) {
         $message = 'נשמר בהצלחה ✓';
     }
@@ -30,21 +47,38 @@ admin_header('הגדרות אתר');
 <h1>הגדרות אתר</h1>
 <?php if ($message): ?><div class="alert alert-info"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
 <?php echo csrf_field(); ?>
 <?php foreach ($groups as $gname => $items): ?>
 <div class="card" style="margin-bottom: 20px;">
     <h2 style="margin: 0 0 18px; font-size: 17px;"><?php echo $group_labels[$gname] ?? $gname; ?></h2>
     <?php foreach ($items as $s): ?>
     <div style="margin-bottom: 18px;">
-        <label style="display: block; font-size: 13px; font-weight: 700; color: #5a6892; margin-bottom: 6px;">
+        <label style="display: block; font-size: 13px; font-weight: 700; color: var(--ink-2); margin-bottom: 6px;">
             <?php echo htmlspecialchars($s['label'] ?: $s['key']); ?>
-            <code style="font-size: 11px; color: #8891b3; font-weight: 400; margin-right: 8px;"><?php echo $s['key']; ?></code>
+            <code style="font-size: 11px; color: var(--ink-4); font-weight: 400; margin-right: 8px;"><?php echo $s['key']; ?></code>
         </label>
-        <?php if ($s['type'] === 'textarea' || $s['type'] === 'script'): ?>
-            <textarea name="s[<?php echo htmlspecialchars($s['key']); ?>]" rows="4" style="width: 100%; padding: 10px 12px; border: 1.5px solid rgba(0,35,102,.14); border-radius: 8px; font-family: <?php echo $s['type']==='script'?'JetBrains Mono':'inherit'; ?>; font-size: 13px;"><?php echo htmlspecialchars($s['value']); ?></textarea>
+        <?php if ($s['type'] === 'image'): ?>
+            <div style="display:grid;grid-template-columns:160px 1fr;gap:14px;align-items:start;">
+                <div>
+                    <?php if (!empty($s['value'])): ?>
+                        <img src="<?php echo htmlspecialchars($s['value']); ?>" style="width:100%;aspect-ratio:1.91/1;object-fit:cover;border-radius:8px;border:1px solid var(--border);">
+                    <?php else: ?>
+                        <div style="width:100%;aspect-ratio:1.91/1;background:var(--bg);border:2px dashed var(--border-strong);border-radius:8px;display:grid;place-items:center;color:var(--ink-4);font-size:11px;">תמונה</div>
+                    <?php endif; ?>
+                </div>
+                <div>
+                    <input type="file" name="s_file[<?php echo htmlspecialchars($s['key']); ?>]" accept="image/*" style="width:100%;padding:10px;border:2px dashed var(--border-strong);border-radius:8px;background:var(--bg);cursor:pointer;font-size:13px;">
+                    <details style="margin-top:6px;">
+                        <summary style="font-size:12px;color:var(--ink-3);cursor:pointer;">או URL ידני</summary>
+                        <input type="text" name="s[<?php echo htmlspecialchars($s['key']); ?>]" value="<?php echo htmlspecialchars($s['value']); ?>" placeholder="/uploads/og.jpg" style="margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:12px;">
+                    </details>
+                </div>
+            </div>
+        <?php elseif ($s['type'] === 'textarea' || $s['type'] === 'script'): ?>
+            <textarea name="s[<?php echo htmlspecialchars($s['key']); ?>]" rows="4" style="font-family: <?php echo $s['type']==='script'?'JetBrains Mono, monospace':'inherit'; ?>;"><?php echo htmlspecialchars($s['value']); ?></textarea>
         <?php else: ?>
-            <input type="<?php echo $s['type']==='number'?'number':'text'; ?>" name="s[<?php echo htmlspecialchars($s['key']); ?>]" value="<?php echo htmlspecialchars($s['value']); ?>" style="width: 100%; padding: 10px 12px; border: 1.5px solid rgba(0,35,102,.14); border-radius: 8px; font-size: 14px;">
+            <input type="<?php echo $s['type']==='number'?'number':'text'; ?>" name="s[<?php echo htmlspecialchars($s['key']); ?>]" value="<?php echo htmlspecialchars($s['value']); ?>">
         <?php endif; ?>
     </div>
     <?php endforeach; ?>
