@@ -10,7 +10,7 @@ define('SITE_TAGLINE', 'ליסינג פרטי ותפעולי');
 define('BASE_URL', '/'); // Update this if the site is in a subdirectory
 
 // Asset Versions (for cache busting)
-define('ASSET_VERSION', '3.2.0');
+define('ASSET_VERSION', '3.3.0');
 
 // Categories
 $CATEGORIES = [

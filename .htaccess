@@ -28,9 +28,20 @@ Options -Indexes
 # Block direct PHP access in includes/ and migrations/
 <IfModule mod_rewrite.c>
     RewriteEngine On
+
+    # Security: block sensitive paths
     RewriteRule ^includes/.*\.php$ - [F,L]
     RewriteRule ^migrations/.*$ - [F,L]
     RewriteRule ^\.env - [F,L]
+    RewriteRule ^docs/.*$ - [F,L]
+    RewriteRule ^setup\.sh$ - [F,L]
+
+    # Phase 3 — Dynamic Pages Builder routing
+    # Skip if file/dir actually exists (built-in PHP pages, assets, etc.)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    # /<slug> → page.php?slug=<slug> (no extension)
+    RewriteRule ^([a-z0-9-]+)/?$ page.php?slug=$1 [QSA,L]
 </IfModule>
 
 # Extra: block .env even without mod_rewrite

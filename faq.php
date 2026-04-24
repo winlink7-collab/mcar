@@ -158,7 +158,7 @@ foreach ($FAQ_GROUPS as $g) {
                     <a href="contact.php" class="btn btn-primary btn-lg" data-offer-modal data-offer-source="faq-cta">
                         <?php echo icon('sparkle', 16); ?> קבל הצעת VIP
                     </a>
-                    <a href="https://wa.me/972524260426" class="btn btn-ghost btn-lg">
+                    <a href="https://wa.me/<?php echo preg_replace('/[^0-9]/', '', setting('contact_whatsapp', '+972524260426')); ?>" class="btn btn-ghost btn-lg">
                         <span style="color: #25D366;"><?php echo icon('whatsapp', 16); ?></span> WhatsApp
                     </a>
                 </div>

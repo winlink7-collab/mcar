@@ -47,11 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 require_once 'includes/header.php';
 
+require_once __DIR__ . '/includes/cms.php';
 $OFFICE_INFO = [
     'tel_aviv' => [
         'name' => 'מטה ראשי · תל אביב',
-        'address' => 'דרך מנחם בגין 132, קומה 18.',
-        'hours' => 'א׳-ה׳ 8-20, ו׳ 8-13'
+        'address' => setting('contact_address', 'דרך מנחם בגין 132, תל אביב, קומה 18'),
+        'hours'   => setting('contact_hours', 'א׳-ה׳ 8-20, ו׳ 8-13'),
     ]
 ];
 ?>
@@ -90,21 +91,29 @@ $OFFICE_INFO = [
                 </div>
             </div>
 
+            <?php
+            $c_phone = setting('contact_phone', '*4260');
+            $c_phone_disp = setting('contact_phone_display', $c_phone);
+            $c_wa = setting('contact_whatsapp', '+972524260426');
+            $c_wa_disp = setting('contact_whatsapp_display', '052-4260-426');
+            $c_wa_clean = preg_replace('/[^0-9]/', '', $c_wa);
+            $c_email = setting('contact_email', 'vip@mcar.co.il');
+            ?>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                <a href="https://wa.me/972524260426" class="btn btn-ghost" style="padding: 18px; border-radius: var(--r-lg); flex-direction: column; align-items: flex-start; gap: 4px;">
+                <a href="https://wa.me/<?php echo htmlspecialchars($c_wa_clean); ?>" class="btn btn-ghost" style="padding: 18px; border-radius: var(--r-lg); flex-direction: column; align-items: flex-start; gap: 4px;">
                     <div style="color: #25D366;"><?php echo icon('whatsapp', 20); ?></div>
                     <div style="font-size: 12px; color: var(--ink-3); font-family: var(--font-mono);">WhatsApp</div>
-                    <div style="font-size: 16px; font-weight: 800;">052-4260-426</div>
+                    <div style="font-size: 16px; font-weight: 800;"><?php echo htmlspecialchars($c_wa_disp); ?></div>
                 </a>
-                <a href="tel:*4260" class="btn btn-ghost" style="padding: 18px; border-radius: var(--r-lg); flex-direction: column; align-items: flex-start; gap: 4px;">
+                <a href="tel:<?php echo htmlspecialchars($c_phone); ?>" class="btn btn-ghost" style="padding: 18px; border-radius: var(--r-lg); flex-direction: column; align-items: flex-start; gap: 4px;">
                     <div style="color: var(--accent);"><?php echo icon('phone', 18); ?></div>
                     <div style="font-size: 12px; color: var(--ink-3); font-family: var(--font-mono);">VIP LINE</div>
-                    <div style="font-size: 16px; font-weight: 800;">*4260</div>
+                    <div style="font-size: 16px; font-weight: 800;"><?php echo htmlspecialchars($c_phone_disp); ?></div>
                 </a>
-                <a href="mailto:vip@mcar.co.il" class="btn btn-ghost" style="padding: 18px; border-radius: var(--r-lg); flex-direction: column; align-items: flex-start; gap: 4px; grid-column: span 2;">
+                <a href="mailto:<?php echo htmlspecialchars($c_email); ?>" class="btn btn-ghost" style="padding: 18px; border-radius: var(--r-lg); flex-direction: column; align-items: flex-start; gap: 4px; grid-column: span 2;">
                     <div style="color: var(--accent);"><?php echo icon('mail', 18); ?></div>
                     <div style="font-size: 12px; color: var(--ink-3); font-family: var(--font-mono);">אימייל</div>
-                    <div style="font-size: 16px; font-weight: 800;">vip@mcar.co.il</div>
+                    <div style="font-size: 16px; font-weight: 800;"><?php echo htmlspecialchars($c_email); ?></div>
                 </a>
             </div>
         </div>

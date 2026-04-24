@@ -178,9 +178,14 @@
     </dialog>
 
     <!-- Mobile Sticky Contact Bar (shown only on mobile) -->
+    <?php
+    $msb_phone = setting('contact_phone', '*4260');
+    $msb_wa    = setting('contact_whatsapp', '+972524260426');
+    $msb_wa_clean = preg_replace('/[^0-9]/', '', $msb_wa);
+    ?>
     <div class="mobile-sticky-bar">
-        <a href="tel:*4260" class="msb-btn msb-call"><?php echo icon('phone', 18); ?> חייג עכשיו</a>
-        <a href="https://wa.me/972524260426" class="msb-btn msb-wa" aria-label="צ'אט בוואטסאפ" title="WhatsApp"><?php echo icon('whatsapp', 22); ?> וואטסאפ</a>
+        <a href="tel:<?php echo htmlspecialchars($msb_phone); ?>" class="msb-btn msb-call"><?php echo icon('phone', 18); ?> חייג עכשיו</a>
+        <a href="https://wa.me/<?php echo htmlspecialchars($msb_wa_clean); ?>" class="msb-btn msb-wa" aria-label="צ'אט בוואטסאפ" title="WhatsApp"><?php echo icon('whatsapp', 22); ?> וואטסאפ</a>
     </div>
 
     <!-- Social Proof Toast -->
