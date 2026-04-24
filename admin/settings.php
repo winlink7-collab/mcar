@@ -6,8 +6,17 @@ require_once __DIR__ . '/../includes/cms.php';
 $pdo = db();
 if (!$pdo) { admin_header('הגדרות'); echo '<div class="alert alert-warn">DB לא מחובר</div>'; admin_footer(); exit; }
 
+require_once __DIR__ . '/../includes/whatsapp.php';
+
 $message = null;
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_check()) {
+$test_result = null;
+
+// Test WhatsApp button
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_check() && !empty($_POST['test_whatsapp'])) {
+    $test_result = test_whatsapp_config();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrf_check() && empty($_POST['test_whatsapp'])) {
     $pairs = $_POST['s'] ?? [];
 
     // Handle any file uploads — keys named s_file[setting_key]
@@ -72,6 +81,25 @@ admin_header('הגדרות אתר');
     <div style="background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;padding:14px 18px;border-radius:10px;font-size:13px;line-height:1.6;margin-bottom:20px;">
         <?php echo $group_help[$gname]; ?>
     </div>
+    <?php endif; ?>
+
+    <?php if ($gname === 'whatsapp'): ?>
+    <div style="background:var(--bg);border:1px solid var(--border);padding:12px 16px;border-radius:10px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div style="font-size:13px;color:var(--ink-2);">
+            <strong>בדיקת חיבור:</strong> אחרי שהזנת את המפתח ושמרת — לחץ כדי לשלוח הודעת בדיקה לטלפון שלך.
+        </div>
+        <form method="POST" style="margin:0;">
+            <?php echo csrf_field(); ?>
+            <button type="submit" name="test_whatsapp" value="1" class="btn btn-primary" style="white-space:nowrap;">📨 שלח בדיקה</button>
+        </form>
+    </div>
+    <?php if ($test_result !== null): ?>
+        <?php if ($test_result['ok']): ?>
+        <div class="alert alert-info" style="margin-bottom:20px;">✅ <?php echo htmlspecialchars($test_result['message']); ?></div>
+        <?php else: ?>
+        <div class="alert alert-err" style="margin-bottom:20px;">❌ <?php echo htmlspecialchars($test_result['message']); ?></div>
+        <?php endif; ?>
+    <?php endif; ?>
     <?php endif; ?>
     <?php foreach ($items as $s): ?>
     <div style="margin-bottom: 18px;">

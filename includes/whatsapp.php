@@ -76,6 +76,9 @@ function build_lead_message($lead) {
 }
 
 function send_callmebot($phone, $apikey, $text) {
+    // CallMeBot expects + prefix — http_build_query will percent-encode to %2B
+    if ($phone[0] !== '+') $phone = '+' . $phone;
+
     $url = 'https://api.callmebot.com/whatsapp.php?' . http_build_query([
         'phone'  => $phone,
         'text'   => $text,
@@ -83,10 +86,34 @@ function send_callmebot($phone, $apikey, $text) {
     ]);
 
     $ctx = stream_context_create([
-        'http' => ['timeout' => 8, 'ignore_errors' => true],
+        'http' => [
+            'timeout' => 10,
+            'ignore_errors' => true,
+            'user_agent' => 'mcar/1.0',
+        ],
     ]);
     $resp = @file_get_contents($url, false, $ctx);
-    return $resp !== false && stripos($resp, 'error') === false;
+    if ($resp === false) return false;
+    // CallMeBot returns HTML with "Message queued" on success, or error text on failure
+    return (stripos($resp, 'queued') !== false || stripos($resp, 'sent') !== false);
+}
+
+/**
+ * Diagnostic test — sends a test WhatsApp to the admin and returns the result.
+ * Used by the admin settings page Test button.
+ */
+function test_whatsapp_config() {
+    $admin_wa = preg_replace('/[^0-9+]/', '', setting('admin_whatsapp', ''));
+    $admin_wa = ltrim($admin_wa, '+');
+    $apikey   = trim(setting('callmebot_apikey', ''));
+
+    if (!$admin_wa) return ['ok' => false, 'message' => 'חסר מספר WhatsApp. מלא בשדה "מספר ה-WhatsApp שלך".'];
+    if (!$apikey)   return ['ok' => false, 'message' => 'חסר API Key. שלח לבוט של CallMeBot את הטקסט המדויק ותקבל מפתח.'];
+
+    $ok = send_callmebot($admin_wa, $apikey, "✅ *mcar test*\n\nהחיבור עובד! אם קיבלת את ההודעה, כל ליד חדש יישלח אליך אוטומטית.\n\n" . date('d/m/Y H:i'));
+
+    if ($ok) return ['ok' => true, 'message' => 'נשלחה הודעת בדיקה. בדוק את WhatsApp שלך תוך 10-60 שניות.'];
+    return ['ok' => false, 'message' => 'השליחה נכשלה. ודא שה-API Key והמספר נכונים, ושאישרת את הבוט ב-WhatsApp.'];
 }
 
 function send_generic_webhook($url, $phone, $text, $lead) {
