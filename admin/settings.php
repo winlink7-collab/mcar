@@ -68,9 +68,59 @@ $group_help = [
 ];
 
 admin_header('הגדרות אתר');
+
+// Current WhatsApp number — shown prominently at top
+$current_wa         = setting('admin_whatsapp', '');
+$current_wa_display = setting('contact_whatsapp_display', '');
 ?>
 <h1>הגדרות אתר</h1>
 <?php if ($message): ?><div class="alert alert-info"><?php echo htmlspecialchars($message); ?></div><?php endif; ?>
+
+<!-- PROMINENT: WhatsApp number for all inquiries -->
+<div class="card" style="margin-bottom: 24px; border: 2px solid var(--accent); background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 60%); box-shadow: 0 4px 16px -4px rgba(15,118,110,.15);">
+    <div style="display:flex;align-items:flex-start;gap:16px;margin-bottom:18px;">
+        <div style="width:48px;height:48px;background:#25D366;color:#fff;border-radius:12px;display:grid;place-items:center;flex-shrink:0;font-size:24px;">💬</div>
+        <div>
+            <h2 style="margin:0 0 4px;font-size:18px;color:var(--ink);">מספר WhatsApp ראשי של האתר</h2>
+            <p style="margin:0;font-size:13px;color:var(--ink-3);">כל פניות הלקוחות מהאתר מגיעות למספר הזה. שנה כאן כדי להעביר את הפניות למספר אחר — ייכנס לתוקף מיידית בכל האתר.</p>
+        </div>
+    </div>
+
+    <form method="POST" style="margin:0;">
+        <?php echo csrf_field(); ?>
+        <div style="display:grid;grid-template-columns:2fr 1fr auto;gap:12px;align-items:end;">
+            <div>
+                <label style="display:block;font-size:13px;font-weight:600;color:var(--ink-2);margin-bottom:6px;">📱 מספר WhatsApp (פורמט בינלאומי)</label>
+                <input type="tel" name="s[admin_whatsapp]" value="<?php echo htmlspecialchars($current_wa); ?>" placeholder="+972542067606" required
+                       pattern="\+\d{10,15}"
+                       style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;direction:ltr;text-align:left;padding:12px 14px;border:2px solid var(--border-strong);border-radius:8px;">
+                <small style="font-size:11px;color:var(--ink-3);">דוגמה: 050-1234567 → הקלד <code>+972501234567</code> (עם +972, בלי 0 בתחילה)</small>
+            </div>
+            <div>
+                <label style="display:block;font-size:13px;font-weight:600;color:var(--ink-2);margin-bottom:6px;">תצוגת מספר באתר</label>
+                <input type="text" name="s[contact_whatsapp_display]" value="<?php echo htmlspecialchars($current_wa_display); ?>" placeholder="054-1234567"
+                       style="font-family:'JetBrains Mono',monospace;font-size:14px;padding:12px 14px;border:2px solid var(--border-strong);border-radius:8px;">
+                <small style="font-size:11px;color:var(--ink-3);">איך הטלפון נראה ללקוח (אופציונלי)</small>
+            </div>
+            <!-- Also mirror to contact_whatsapp for legacy -->
+            <input type="hidden" name="s[contact_whatsapp]" value="<?php echo htmlspecialchars($current_wa); ?>" id="_wa_mirror">
+            <button type="submit" class="btn btn-primary" style="padding:13px 22px;font-size:14px;font-weight:700;white-space:nowrap;">💾 שמור מספר</button>
+        </div>
+    </form>
+
+    <script>
+    // Mirror admin_whatsapp to contact_whatsapp on save
+    document.querySelector('input[name="s[admin_whatsapp]"]').addEventListener('input', function() {
+        document.getElementById('_wa_mirror').value = this.value;
+    });
+    </script>
+
+    <div style="margin-top:16px;padding:12px 16px;background:#fef3c7;border:1px solid #fde68a;border-radius:8px;font-size:13px;color:#92400e;">
+        <strong>📍 המספר הזה משמש ב:</strong>
+        כל כפתורי "קבל הצעה" באתר · ה-bar הצף במובייל · דף צור קשר · FAQ · ליסינג תפעולי ·
+        ההתראות אוטומטיות (אם הפעלת CallMeBot למטה).
+    </div>
+</div>
 
 <form method="POST" enctype="multipart/form-data">
 <?php echo csrf_field(); ?>
